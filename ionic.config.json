@@ -1,0 +1,7 @@
+{
+  "name": "mayapur_emporium",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
