@@ -17,19 +17,51 @@ import {
   IonChip,
   IonButtons,
   IonToast,
-  IonMenuButton
-} from '@ionic/angular/standalone';
+  IonMenuButton, IonCol, IonRow, IonGrid } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowForward, maleOutline, femaleOutline } from 'ionicons/icons';
+import { OrderComponent } from "../../components/order/order.component";
 
 type Step = 'gender' | 'details' | 'measurements' | 'order';
+
+interface CustomerMeasurements {
+  chest: number | null;
+  shoulders: number | null;
+  armLength: number | null;
+  bicep: number | null;
+  neck: number | null;
+  wrist: number | null;
+  upperBack: number | null;
+  lowerBack: number | null;
+  
+  waist: number | null;
+  hips: number | null;
+  inseam: number | null;
+  thigh: number | null;
+  knee: number | null;
+  calf: number | null;
+  ankle: number | null;
+  
+  totalLength: number | null;
+  shoulderToWaist: number | null;
+  waistToAnkle: number | null;
+}
+
+interface CustomerData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+  measurements: CustomerMeasurements;
+}
 
 @Component({
   selector: 'app-new-customer',
   templateUrl: './new-customer.page.html',
   styleUrls: ['./new-customer.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonGrid, IonRow, IonCol, 
     CommonModule,
     FormsModule,
     IonContent,
@@ -47,22 +79,42 @@ type Step = 'gender' | 'details' | 'measurements' | 'order';
     IonChip,
     IonButtons,
     IonToast,
-    IonMenuButton
-  ]
+    IonMenuButton,
+    OrderComponent
+]
 })
 export class NewCustomerPage {
   currentStep: Step = 'gender';
   
-  customerData = {
-    gender: '',
+
+
+  customerData: CustomerData = {
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
+    gender: 'male',
     measurements: {
-      chest: null as number | null,
-      waist: null as number | null,
-      hips: null as number | null
+      chest: null,
+      shoulders: null,
+      armLength: null,
+      bicep: null,
+      neck: null,
+      wrist: null,
+      upperBack: null,
+      lowerBack: null,
+      
+      waist: null,
+      hips: null,
+      inseam: null,
+      thigh: null,
+      knee: null,
+      calf: null,
+      ankle: null,
+      
+      totalLength: null,
+      shoulderToWaist: null,
+      waistToAnkle: null
     }
   };
 
@@ -98,8 +150,7 @@ export class NewCustomerPage {
 
   selectGender(gender: 'male' | 'female') {
     this.customerData.gender = gender;
-    this.showToast('Gender selected', 'success');
-    this.selectStep('details');
+    this.selectStep('order');
   }
 
   onSubmit() {
@@ -152,5 +203,11 @@ export class NewCustomerPage {
       message,
       color
     };
+  }
+
+  move_to_details(event: boolean) {
+    if (event) {
+      this.selectStep('details');
+    }
   }
 }

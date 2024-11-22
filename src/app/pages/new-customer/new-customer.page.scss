@@ -152,97 +152,90 @@ $transition-standard: all 0.3s ease;
 
 // Modern Form Styles
 .modern-form {
-  max-width: 500px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  animation: fadeIn 0.3s ease-out;
+  padding: 20px;
 
   .form-title {
-    font-size: 1.75rem;
-    color: $text-dark;
+    font-size: 2rem;
+    color: #2c3e50;
     margin-bottom: 2rem;
-    font-weight: 600;
     text-align: center;
+    font-weight: 600;
   }
+}
 
-  .form-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
+.form-section {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 
-  .custom-input {
-    @include form-input-base;
-
-    &::part(native) {
-      padding: 0;
-    }
-
-    ion-input {
-      --padding-start: 16px;
-      --padding-end: 16px;
-      --padding-bottom: 16px;
-      --background: #{$bg-light};
-      --border-radius: 12px;
-      --placeholder-color: #6c757d;
-      --color: #{$text-dark};
-      
-      &.ion-valid {
-        --background: #{$bg-light};
-      }
-
-      &.ion-invalid.ion-touched {
-        --background: #fff5f5;
-      }
-
-      &::part(native) {
-        padding: 0;
-      }
-    }
-
-    &:hover ion-input {
-      --background: #{$bg-hover};
+  ion-card-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    
+    ion-card-title {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      font-weight: 600;
     }
   }
+
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+.custom-input {
+  --background: transparent;
+  --border-color: transparent;
+  --highlight-height: 0;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  --padding-start: 0;
+
+  &:hover {
+    --background: #f8f9fa;
+  }
+
+  ion-input {
+    --padding-start: 16px;
+    --padding-end: 16px;
+
+    --padding-bottom: 16px;
+    --placeholder-color: #6c757d;
+    --color: #2c3e50;
+    
+    &.ion-valid {
+      --background: #f8f9fa;
+    }
+
+    &.ion-invalid.ion-touched {
+      --background: #fff5f5;
+    }
+  }
+}
+
+.button-container {
+  margin-top: 2rem;
+  padding: 0 1rem;
 
   .continue-btn {
-    margin-top: 2rem;
-    --background: #{$primary-color};
-    --background-hover: #{$secondary-color};
+    --background: #FF6B98;
+    --background-hover: #FF8FAB;
     --border-radius: 12px;
     --padding-top: 1rem;
     --padding-bottom: 1rem;
     font-weight: 500;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba($primary-color, 0.2);
-    transition: transform 0.2s ease;
-
+    box-shadow: 0 4px 15px rgba(255, 107, 152, 0.2);
+    
     &:hover {
-      transform: translateY(-2px);
-    }
-
-    ion-icon {
-      margin-left: 8px;
+      --background: #FF8FAB;
     }
   }
 }
 
-// Animations
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Responsive Styles
+// Responsive adjustments
 @media (max-width: 768px) {
   .welcome-text {
     h1 { font-size: 2.5rem; }
@@ -262,9 +255,19 @@ $transition-standard: all 0.3s ease;
   .card-content h2 { font-size: 20px; }
 
   .modern-form {
-    padding: 1.5rem;
-    margin: 1rem;
-    .form-title { font-size: 1.5rem; }
+    padding: 10px;
+    
+    .form-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .form-section {
+    ion-card-header {
+      ion-card-title {
+        font-size: 1.1rem;
+      }
+    }
   }
 }
 

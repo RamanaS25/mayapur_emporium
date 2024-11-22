@@ -1,0 +1,296 @@
+.order-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.clothing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 20px;
+}
+
+.clothing-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-content {
+    padding: 24px;
+  }
+
+  .item-name {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .item-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+
+
+
+  .add-to-cart {
+    --background: #FF6B98;
+    --background-hover: #FF8FAB;
+    --border-radius: 12px;
+    --padding-top: 1rem;
+    --padding-bottom: 1rem;
+    font-weight: 500;
+    margin-top: 16px;
+    
+    &:hover:not([disabled]) {
+      --background: #FF8FAB;
+    }
+
+    ion-icon {
+      margin-left: 8px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .clothing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 10px;
+  }
+
+  .clothing-card {
+    .card-content {
+      padding: 16px;
+    }
+
+    .item-name {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+
+
+// Add these styles to your existing SCSS file
+
+.customization-interface {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  
+    .customization-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      
+      h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: #2c3e50;
+        font-weight: 600;
+      }
+  
+      .back-button {
+        margin-right: 20px;
+        --color: #FF6B98;
+      }
+    }
+  }
+  
+  .customization-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  
+    h3 {
+      color: #2c3e50;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+  
+    h4 {
+      color: #2c3e50;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+    }
+  }
+  
+  .fabric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  
+    .fabric-card {
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 2px solid transparent;
+  
+      &.selected {
+        border-color: #FF6B98;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 107, 152, 0.2);
+      }
+  
+      &:hover {
+        transform: translateY(-2px);
+      }
+  
+      .fabric-swatch {
+        height: 120px;
+        background-size: cover;
+        background-position: center;
+      }
+  
+      .fabric-details {
+        padding: 12px;
+        background: white;
+  
+        h4 {
+          margin: 0 0 4px 0;
+          font-size: 1rem;
+        }
+  
+        p {
+          margin: 0;
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+  
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  
+    .option-card {
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      background: white;
+      text-align: center;
+  
+      &.selected {
+        border-color: #FF6B98;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 107, 152, 0.2);
+      }
+  
+      img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+      }
+  
+      span {
+        display: block;
+        padding: 10px;
+        font-size: 0.9rem;
+        color: #2c3e50;
+      }
+    }
+  }
+  
+  ion-range {
+    --bar-background: #e0e0e0;
+    --bar-background-active: #FF8FAB;
+    --knob-background: #FF6B98;
+    --pin-background: #FF6B98;
+    padding: 20px 0;
+  }
+  
+  .notes-input {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+  .price-summary {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  
+    .price-details {
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        color: #666;
+  
+        &.total {
+          border-bottom: none;
+          color: #2c3e50;
+          font-weight: 600;
+          font-size: 1.2rem;
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+  
+  .add-to-cart-btn {
+    --background: #FF6B98;
+    --background-hover: #FF8FAB;
+    --border-radius: 12px;
+    --padding-top: 1rem;
+    --padding-bottom: 1rem;
+    font-weight: 500;
+    margin-top: 20px;
+  
+    &:hover:not([disabled]) {
+      --background: #FF8FAB;
+    }
+  
+    &[disabled] {
+      opacity: 0.7;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .customization-interface {
+      padding: 15px;
+    }
+  
+    .fabric-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  
+    .options-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+  
+    .customization-section {
+      padding: 15px;
+    }
+  }
