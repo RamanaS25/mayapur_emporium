@@ -1,0 +1,159 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-toast 
+    [isOpen]="toast.isToastOpen" 
+    [message]="toast.message" 
+    [color]="toast.color" 
+    (didDismiss)="toast.isToastOpen = false" 
+    position="top" 
+    duration="2000">
+  </ion-toast>
+
+  <div class="welcome-text">
+    <h1 class="ion-text-center">Welcome to<br>Mayapur Emporium</h1>
+    <ion-item style="--background: transparent;" lines="none">
+      <div class="step-indicators">
+        <ion-chip (click)="selectStep('gender')" [class.active]="currentStep === 'gender'">Gender</ion-chip>
+        <ion-chip (click)="selectStep('order')" [class.active]="currentStep === 'order'">Order</ion-chip>
+        <ion-chip (click)="selectStep('details')" [class.active]="currentStep === 'details'">Details</ion-chip>
+        <ion-chip (click)="selectStep('measurements')" [class.active]="currentStep === 'measurements'">Measurements</ion-chip>
+      </div>
+    </ion-item>
+  </div>
+
+  @switch (currentStep) {
+    @case ('gender') {
+      <div class="gender-cards">
+        <ion-card class="gender-card" (click)="selectGender('male')">
+          <div class="card-background male">
+            <div class="icon-container">
+              <ion-icon name="male-outline" size="large"></ion-icon>
+            </div>
+            <div class="card-content">
+              <h2>Male</h2>
+              <p>Tap to select</p>
+            </div>
+            <div class="hover-overlay"></div>
+          </div>
+        </ion-card>
+
+        <ion-card class="gender-card" (click)="selectGender('female')">
+          <div class="card-background female">
+            <div class="icon-container">
+              <ion-icon name="female-outline" size="large"></ion-icon>
+            </div>
+            <div class="card-content">
+              <h2>Female</h2>
+              <p>Tap to select</p>
+            </div>
+            <div class="hover-overlay"></div>
+          </div>
+        </ion-card>
+      </div>
+    }
+
+    @case ('order') {
+    
+    }
+
+    @case ('details') {
+      <div class="modern-form">
+        <h2 class="form-title">Customer Details</h2>
+        
+        <div class="form-fields">
+          <ion-item class="custom-input">
+            <ion-input [(ngModel)]="customerData.firstName" 
+                      label="First Name" 
+                      labelPlacement="floating" 
+                      type="text"
+                      class="modern-input"
+                      required></ion-input>
+            </ion-item>
+
+            <ion-item class="custom-input">
+              <ion-input [(ngModel)]="customerData.lastName" 
+                        label="Last Name" 
+                        labelPlacement="floating" 
+                        type="text"
+                        class="modern-input"
+                        required></ion-input>
+            </ion-item>
+
+            <ion-item class="custom-input">
+              <ion-input [(ngModel)]="customerData.email" 
+                        label="Email" 
+                        labelPlacement="floating" 
+                        type="email"
+                        class="modern-input"
+                        required></ion-input>
+            </ion-item>
+
+            <ion-item class="custom-input">
+              <ion-input [(ngModel)]="customerData.phone" 
+                        label="Phone Number" 
+                        labelPlacement="floating" 
+                        type="tel"
+                        class="modern-input"
+                        required></ion-input>
+            </ion-item>
+          </div>
+
+          <ion-button class="continue-btn" expand="block" (click)="onSubmit()">
+            Continue
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-button>
+        </div>
+    }
+
+    @case ('measurements') {
+      <div class="modern-form">
+        <h2 class="form-title">Measurements</h2>
+        
+        <div class="form-fields">
+          <ion-item class="custom-input">
+            <ion-input [(ngModel)]="customerData.measurements.chest" 
+                      label="Chest" 
+                      labelPlacement="floating" 
+                      type="number"
+                      class="modern-input"
+                      required></ion-input>
+          </ion-item>
+
+          <ion-item class="custom-input">
+            <ion-input [(ngModel)]="customerData.measurements.waist" 
+                      label="Waist" 
+                      labelPlacement="floating" 
+                      type="number"
+                      class="modern-input"
+                      required></ion-input>
+          </ion-item>
+
+          <ion-item class="custom-input">
+            <ion-input [(ngModel)]="customerData.measurements.hips" 
+                      label="Hips" 
+                      labelPlacement="floating" 
+                      type="number"
+                      class="modern-input"
+                      required></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button class="continue-btn" expand="block" (click)="onSubmit()">
+          Continue
+          <ion-icon slot="end" name="arrow-forward"></ion-icon>
+        </ion-button>
+      </div>
+    }
+
+    @default {
+      <!-- Optional: Add a default case if needed -->
+    }
+  }
+</ion-content>
