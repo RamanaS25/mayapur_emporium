@@ -1,11 +1,11 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, IonItem, IonCard, IonLabel, IonCardHeader, IonSearchbar, IonCardContent, IonButtons, IonMenuButton, IonButton, IonIcon, IonAvatar, IonChip, IonList, IonNote } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonRow, IonGrid, IonItem, IonCard, IonLabel, IonCardHeader, IonSearchbar, IonCardContent, IonButtons, IonMenuButton, IonButton, IonIcon, IonAvatar, IonChip, IonList, IonNote, IonModal, IonText, IonItemGroup, IonItemDivider, IonDatetime, IonCardTitle, IonCardSubtitle } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { personOutline, addCircleOutline, mailOutline, callOutline, calendarOutline, bagCheckOutline, resizeOutline, timeOutline, cashOutline, personCircleOutline } from 'ionicons/icons';
+import { personOutline, addCircleOutline, mailOutline, callOutline, calendarOutline, bagCheckOutline, resizeOutline, timeOutline, cashOutline, personCircleOutline, close, arrowForwardOutline, shirtOutline, checkmarkCircle, checkmarkDoneCircle, flag, documentTextOutline, colorPaletteOutline, constructOutline } from 'ionicons/icons';
 
 addIcons({ personOutline });
 
@@ -88,7 +88,7 @@ interface Customer {
   templateUrl: './customers.page.html',
   styleUrls: ['./customers.page.scss'],
   standalone: true,
-  imports: [IonNote, IonList, IonChip, IonAvatar, IonIcon, IonButton, IonButtons, IonMenuButton, IonCardContent, IonCardHeader, IonSearchbar, IonLabel, IonCard, IonItem, IonContent, IonHeader, IonTitle, IonToolbar,  CommonModule, FormsModule, IonGrid, IonRow, IonCol]
+  imports: [IonCardSubtitle, IonCardTitle, IonDatetime, IonItemDivider, IonItemGroup, IonText, IonModal, IonNote, IonList, IonChip, IonAvatar, IonIcon, IonButton, IonButtons, IonMenuButton, IonCardContent, IonCardHeader, IonSearchbar, IonLabel, IonCard, IonItem, IonContent, IonHeader, IonTitle, IonToolbar,  CommonModule, FormsModule, IonGrid, IonRow, IonCol]
 })
 export class CustomersPage{
   customers: Customer[] = [
@@ -232,6 +232,8 @@ export class CustomersPage{
  searchTerm = signal('');
   currentView: 'all' | 'active' = 'all';
   selectedCustomer: Customer | null = null;
+  isModalOpen = false;
+  selectedOrder: any = null;
 
   router = inject(Router);
   navCtrl = inject(NavController);
@@ -240,7 +242,7 @@ export class CustomersPage{
     return this.customers.filter(customer => customer.firstName.toLowerCase().includes(this.searchTerm().toLowerCase()));
   });
   constructor() {
-      addIcons({addCircleOutline,mailOutline,callOutline,personOutline,calendarOutline,bagCheckOutline,resizeOutline,timeOutline,cashOutline,personCircleOutline}); }
+      addIcons({addCircleOutline,mailOutline,callOutline,personOutline,calendarOutline,bagCheckOutline,resizeOutline,timeOutline,cashOutline,personCircleOutline,close,shirtOutline,colorPaletteOutline,arrowForwardOutline,constructOutline,checkmarkCircle,checkmarkDoneCircle,flag,documentTextOutline}); }
 
   setSearchTerm(event: any) {
     this.searchTerm.set(event.target.value);
@@ -259,5 +261,10 @@ export class CustomersPage{
   formatLabel(key: string): string {
     return key.replace(/([A-Z])/g, ' $1')
       .replace(/^./, str => str.toUpperCase());
+  }
+
+  openOrderDetails(order: any) {
+    this.selectedOrder = order;
+    this.isModalOpen = true;
   }
 }

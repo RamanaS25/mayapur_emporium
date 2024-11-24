@@ -129,31 +129,6 @@
   }
 }
 
-.measurements-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
-
-  .measurement-item {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-
-    .label {
-      display: block;
-      color: #6c757d;
-      font-size: 0.9rem;
-    }
-
-    .value {
-      display: block;
-      color: #2c3e50;
-      font-weight: 500;
-      margin-top: 4px;
-    }
-  }
-}
-
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -216,18 +191,6 @@
 
   p {
     margin: 0;
-  }
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  
-  .section-icon {
-    font-size: 24px;
-    color: var(--ion-color-primary);
   }
 }
 
@@ -295,6 +258,109 @@
     ion-note {
       font-size: 1rem;
       font-weight: 500;
+    }
+  }
+}
+
+// Add these to your existing styles
+ion-modal {
+  --height: 80%;
+  --border-radius: 16px;
+  
+  ion-datetime {
+    margin: 0;
+  }
+
+  .order-price {
+    text-align: center;
+    padding: 16px 0;
+    
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
+  .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    background: var(--ion-color-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+  }
+
+  ion-item-divider {
+    --background: transparent;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ion-color-medium);
+  }
+}
+
+.order-details-card {
+  margin: 16px;
+
+  .order-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .quick-info-grid {
+    margin: 16px 0;
+    
+    .info-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--ion-color-light);
+
+      .info-text {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .timeline-section {
+    margin-top: 24px;
+
+    .timeline-container {
+      padding: 16px;
+    }
+
+    .timeline-divider {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+
+      .line {
+        flex: 1;
+        height: 1px;
+        background: var(--ion-color-medium);
+      }
+
+      ion-icon {
+        margin: 0 12px;
+      }
+    }
+
+    .timeline-item {
+      --padding-start: 0;
+      
+      ion-icon {
+        font-size: 24px;
+        margin-right: 16px;
+      }
     }
   }
 }

@@ -136,7 +136,7 @@
                       </h2>
                       <div class="orders-grid">
                         @for (order of selectedCustomer.orders; track order.id) {
-                          <ion-card class="order-card">
+                          <ion-card class="order-card" (click)="openOrderDetails(order)">
                             <ion-card-content>
                               <div class="order-header">
                                 <h3>{{order.clothingItem.name}}</h3>
@@ -183,4 +183,143 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" style="--height: 100%; --width: 100%; --border-radius: 16px;">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Order Details #{{selectedOrder?.id}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isModalOpen = false">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <!-- Order Info Card -->
+        <ion-card class="order-details-card">
+          <ion-card-header>
+            <div class="order-header-content">
+              <div class="order-title-section">
+                <ion-card-title>{{selectedOrder?.clothingItem.name}}</ion-card-title>
+                <ion-chip [color]="getStatusColor(selectedOrder?.status)">
+                  {{selectedOrder?.status}}
+                </ion-chip>
+              </div>
+              <div class="order-price">
+                <ion-text color="primary">
+                  <h2>₹{{selectedOrder?.totalPrice}}</h2>
+                </ion-text>
+              </div>
+            </div>
+          </ion-card-header>
+
+          <ion-card-content>
+            <!-- Quick Info Grid -->
+            <ion-grid class="quick-info-grid">
+              <ion-row>
+                <ion-col size="6" size-md="3">
+                  <div class="info-box">
+                    <ion-icon name="shirt-outline" color="primary"></ion-icon>
+                    <div class="info-text">
+                      <small>Base</small>
+                      <strong>Dress</strong>
+                    </div>
+                  </div>
+                </ion-col>
+                <ion-col size="6" size-md="3">
+                  <div class="info-box">
+                    <ion-icon name="shirt-outline" color="primary"></ion-icon>
+                    <div class="info-text">
+                      <small>Style</small>
+                      <strong>{{selectedOrder?.customizations.neckline}}</strong>
+                    </div>
+                  </div>
+                </ion-col>
+                <ion-col size="6" size-md="3">
+                  <div class="info-box">
+                    <ion-icon name="color-palette-outline" color="primary"></ion-icon>
+                    <div class="info-text">
+                      <small>Fabric</small>
+                      <strong>{{selectedOrder?.fabric.name}}</strong>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <!-- Timeline Section -->
+            <ion-item-group class="timeline-section">
+              <ion-item-divider>
+                <ion-label>Order Timeline</ion-label>
+              </ion-item-divider>
+              
+              <div class="timeline-container">
+                <ion-item lines="none" class="timeline-item">
+                  <ion-icon name="calendar-outline" color="primary"></ion-icon>
+                  <ion-label>
+                    <h3>Order Created</h3>
+                    <p>{{selectedOrder?.orderDate | date:'mediumDate'}}</p>
+                  </ion-label>
+                </ion-item>
+
+
+                <ion-item lines="none" class="timeline-item">
+                  <ion-icon name="time-outline" color="danger"></ion-icon>
+                  <ion-label>
+                    <h3>Due Date</h3>
+                    <p>{{selectedOrder?.dueDate | date:'mediumDate'}}</p>
+                  </ion-label>
+                </ion-item>
+              </div>
+            </ion-item-group>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Tailor Info Card -->
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Tailor Information</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-item lines="none">
+              <ion-avatar slot="start">
+                <div class="avatar-placeholder">
+                  {{selectedOrder?.tailor.name[0]}}
+                </div>
+              </ion-avatar>
+              <ion-label>
+                <h2>{{selectedOrder?.tailor.name}}</h2>
+                <p>Master Tailor</p>
+              </ion-label>
+            </ion-item>
+
+            <ion-list>
+              <ion-item>
+                <ion-icon name="call-outline" slot="start"></ion-icon>
+                <ion-label>
+                  <p>Phone</p>
+                  <h3>8005398363</h3>
+                </ion-label>
+              </ion-item>
+
+              <ion-item>
+                <ion-icon name="mail-outline" slot="start"></ion-icon>
+                <ion-label>
+                  <p>Email</p>
+                  <h3>{{'ramanas@gmail.com'}}</h3>
+                </ion-label>
+              </ion-item>
+
+            </ion-list>
+            
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
