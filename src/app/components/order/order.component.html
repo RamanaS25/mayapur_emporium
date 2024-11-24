@@ -54,7 +54,24 @@
                       </div>
                     }
                   </div>
+
+                         <!-- Length Adjustment -->
+                  <div class="style-option">
+                    <ion-range
+                      [(ngModel)]="selectedLength"
+                      [min]="32"
+                      [max]="48"
+                      [pin]="true"
+                      [snaps]="true"
+                      [step]="2"
+                      labelPlacement="start">
+                      <div slot="label">Length (inches)</div>
+                    </ion-range>
+                  </div>
                 </div>
+                </div>
+
+              
 
                 <!-- Style Customizations -->
                 <div class="customization-section">
@@ -75,6 +92,19 @@
                     </div>
                   </div>
 
+                    <div class="style-option">
+                    <ion-range
+                      [(ngModel)]="selectedLength"
+                      [min]="32"
+                      [max]="48"
+                      [pin]="true"
+                      [snaps]="true"
+                      [step]="2"
+                      labelPlacement="start">
+                      <div slot="label">Depth (inches)</div>
+                    </ion-range>
+                  </div>
+
                   <!-- Sleeve Style -->
                   <div class="style-option">
                     <h4>Sleeves</h4>
@@ -90,9 +120,7 @@
                     </div>
                   </div>
 
-                  <!-- Length Adjustment -->
-                  <div class="style-option">
-                    <h4>Length</h4>
+                        <div class="style-option">
                     <ion-range
                       [(ngModel)]="selectedLength"
                       [min]="32"
@@ -101,10 +129,9 @@
                       [snaps]="true"
                       [step]="2"
                       labelPlacement="start">
-                      <div slot="label">Length (inches)</div>
+                      <div slot="label">Size (inches)</div>
                     </ion-range>
                   </div>
-                </div>
 
                 <!-- Additional Notes -->
                 <div class="customization-section">

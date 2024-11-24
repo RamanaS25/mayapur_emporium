@@ -1,0 +1,186 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Customers</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/new-customer">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-grid class="customer-grid">
+    <!-- Customer List Column -->
+    <ion-row>
+      <ion-col size="12" size-md="3">
+        <ion-card class="customer-list-card">
+          <ion-card-header>
+            <ion-searchbar [(ngModel)]="searchTerm" 
+                          (ionInput)="setSearchTerm($event)" 
+                          placeholder="Search customers"
+                          class="custom-searchbar">
+            </ion-searchbar>
+          </ion-card-header>
+          
+          <div class="customer-list">
+            @for (customer of filteredCustomers(); track customer) {
+              <ion-item [class.selected]="selectedCustomer?.id === customer.id" 
+                       lines="none"
+                       button
+                       (click)="selectedCustomer = customer">
+                <ion-avatar slot="start">
+                  <div class="avatar-placeholder">
+                    {{ customer.firstName[0] }}{{ customer.lastName[0] }}
+                  </div>
+                </ion-avatar>
+                <ion-label>
+                  <h2>{{customer.firstName}} {{customer.lastName}}</h2>
+                  <p>Last visit: {{customer.lastVisit | date:'mediumDate'}}</p>
+                </ion-label>
+              </ion-item>
+            }
+          </div>
+        </ion-card>
+      </ion-col>
+
+      <!-- Customer Details Column -->
+      <ion-col size="12" size-md="9">
+        <ion-card class="details-card">
+          @if (selectedCustomer) {
+            <ion-card-content>
+              <!-- Customer Header -->
+              <div class="customer-header">
+                <h1>{{selectedCustomer.firstName}} {{selectedCustomer.lastName}}</h1>
+                <div class="customer-quick-info">
+                  <ion-chip>
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <ion-label>{{selectedCustomer.email}}</ion-label>
+                  </ion-chip>
+                  <ion-chip>
+                    <ion-icon name="call-outline"></ion-icon>
+                    <ion-label>{{selectedCustomer.phone}}</ion-label>
+                  </ion-chip>
+                </div>
+              </div>
+
+              <ion-grid class="details-grid">
+                <!-- Personal Info & Measurements -->
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <div class="info-section">
+                      <h2 class="section-title">
+                        <ion-icon name="person-outline" class="section-icon"></ion-icon>
+                        Personal Information
+                      </h2>
+                      
+                      <div class="photo-gallery">
+                        <div class="photo-item">
+                          <img src="https://ionicframework.com/docs/img/demos/card-media.png" alt="Customer photo 1">
+                        </div>
+                        <div class="photo-item">
+                          <img src="https://ionicframework.com/docs/img/demos/card-media.png" alt="Customer photo 2">
+                        </div>
+                        <div class="photo-item">
+                          <img src="https://ionicframework.com/docs/img/demos/card-media.png" alt="Customer photo 3">
+                        </div>
+                      </div>
+
+                      <ion-list lines="none" class="info-list">
+                        <ion-item>
+                          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+                          <ion-label>
+                            <span class="info-label">Last Visit</span>
+                            <span class="info-value">{{selectedCustomer.lastVisit | date:'mediumDate'}}</span>
+                          </ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-icon name="bag-check-outline" slot="start"></ion-icon>
+                          <ion-label>
+                            <span class="info-label">Total Orders</span>
+                            <span class="info-value">{{selectedCustomer.orders.length}}</span>
+                          </ion-label>
+                        </ion-item>
+                      </ion-list>
+                    </div>
+                  </ion-col>
+
+                  <ion-col size="12" size-md="6">
+                    <div class="info-section">
+                      <h2 class="section-title">
+                        <ion-icon name="resize-outline" class="section-icon"></ion-icon>
+                        Measurements
+                      </h2>
+                      <ion-list lines="none" class="measurements-list">
+                        @for (measurement of selectedCustomer.measurements | keyvalue; track measurement.key) {
+                          <ion-item lines="none">
+                            <ion-label slot="start">{{formatLabel(measurement.key)}}</ion-label>
+                            <ion-note slot="start">{{measurement.value}} cm</ion-note>
+                          </ion-item>
+                        }
+                      </ion-list>
+                    </div>
+                  </ion-col>
+                </ion-row>
+
+                <!-- Orders Section -->
+                <ion-row>
+                  <ion-col size="12">
+                    <div class="info-section">
+                      <h2>
+                        <ion-icon name="bag-check-outline"></ion-icon>
+                        Orders
+                      </h2>
+                      <div class="orders-grid">
+                        @for (order of selectedCustomer.orders; track order.id) {
+                          <ion-card class="order-card">
+                            <ion-card-content>
+                              <div class="order-header">
+                                <h3>{{order.clothingItem.name}}</h3>
+                                <ion-chip [color]="getStatusColor(order.status)">
+                                  {{order.status}}
+                                </ion-chip>
+                              </div>
+                              
+                              <div class="order-details">
+                                <div class="detail-item">
+                                  <ion-icon name="person-outline"></ion-icon>
+                                  <span>{{order.tailor.name}}</span>
+                                </div>
+                                <div class="detail-item">
+                                  <ion-icon name="calendar-outline"></ion-icon>
+                                  <span>Created: {{order.orderDate | date:'mediumDate'}}</span>
+                                </div>
+                                <div class="detail-item">
+                                  <ion-icon name="time-outline"></ion-icon>
+                                  <span>Due: {{order.dueDate | date:'mediumDate'}}</span>
+                                </div>
+                                <div class="detail-item price">
+                                  <ion-icon name="cash-outline"></ion-icon>
+                                  <span>₹{{order.totalPrice}}</span>
+                                </div>
+                              </div>
+                            </ion-card-content>
+                          </ion-card>
+                        }
+                      </div>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          } @else {
+            <ion-card-content class="no-selection">
+              <ion-icon name="person-circle-outline"></ion-icon>
+              <h2>Select a customer to view details</h2>
+              <p>Choose a customer from the list to view their information</p>
+            </ion-card-content>
+          }
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

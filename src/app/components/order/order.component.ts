@@ -12,7 +12,8 @@ import {
   IonChip,
   IonLabel,
   IonBadge,
-  IonRange
+  IonRange,
+  IonTextarea
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { bagAddOutline, cartOutline, addCircleOutline, arrowBackOutline } from 'ionicons/icons';
@@ -60,9 +61,10 @@ interface StyleOption {
     IonLabel,
     IonBadge,
     IonRange,
+    IonTextarea
   ]
 })
-export class OrderComponent {
+export class OrderComponent { 
   @Input() selectedGender: 'male' | 'female' = 'male';
   @Output() selected_outfit = new EventEmitter<boolean>();
   is_editing = false;
