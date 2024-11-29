@@ -73,19 +73,30 @@
                         getKeyPairValues(selectedModel.base_price); track
                         $index) {
 
-                        <ion-item lines="none">
+                        <div lines="none" class="price-input-item">
+                          <ion-note>{{ $index + 1 }}.</ion-note>
                           <ion-input
-                            label="size"
+                          mode="md"
+                            class="modern-input"
+                            fill="outline"
+                            label="Size"
                             [value]="item.key"
                             labelPlacement="floating"
+                    
                           >
                           </ion-input>
                           <ion-input
-                            label="cost"
+                            mode="md"
+                            class="modern-input"
+                            fill="outline"
+                            label="Cost"
                             labelPlacement="floating"
                             [value]="item.value"
-                          ></ion-input>
-                        </ion-item>
+                            type="number"
+                          >
+                            <div slot="start">₹</div>
+                          </ion-input>
+                        </div>
 
                         }
                       </ion-card-content>
@@ -99,20 +110,31 @@
                         @for (item of
                         getKeyPairValues(selectedModel.fabric_usage); track
                         $index) {
-
-                        <ion-item lines="none">
-                          <ion-input
-                            label="size"
-                            [value]="item.key"
-                            labelPlacement="floating"
-                          >
-                          </ion-input>
-                          <ion-input
-                            labelPlacement="floating"
-                            label="fabric usage"
-                            [value]="item.value"
-                          ></ion-input>
-                        </ion-item>
+                       
+                       <div lines="none" class="price-input-item">
+                        <ion-note>{{ $index + 1 }}.</ion-note>
+                        <ion-input
+                          mode="md"
+                          class="modern-input"
+                          fill="outline"
+                          label="Size"
+                          [value]="item.key"
+                          labelPlacement="floating"
+                        
+                        >
+                        </ion-input>
+                        <ion-input
+                         mode="md"
+                          class="modern-input"
+                          fill="outline"
+                          label="Fabric Usage"
+                          labelPlacement="floating"
+                          [value]="item.value"
+                          type="number"
+                        >
+                          <div slot="start">₹</div>
+                        </ion-input>
+                      </div>
 
                         }
                       </ion-card-content>

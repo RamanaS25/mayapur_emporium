@@ -3,6 +3,9 @@
   --card-border-radius: 16px;
   --primary-color: #ff6b98;
   --secondary-color: #ff8fab;
+  --ion-color-light-rgb: 244, 245, 248;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-medium: #92949c;
 }
 
 // Customer List Styling
@@ -107,15 +110,38 @@
 }
 
 .price-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  ion-card {
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
+  .price-input-item {
+    display: grid;
+    grid-template-columns: 30px 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+    align-items: center;
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 30px 1fr;
+    }
+
+    ion-note {
+      font-weight: 500;
+      color: var(--ion-color-medium);
+      text-align: center;
+    }
+
+    .modern-input {
+      --border-radius: 8px;
+      --background: var(--ion-color-light);
+      
+      &[readonly] {
+        opacity: 0.8;
+      }
+
+      &:focus-within {
+        --border-color: var(--ion-color-primary);
+      }
+    }
   }
 }
+
 .card-picture {
   width: 150px;
   height: auto;
@@ -128,13 +154,5 @@
   .ion-card {
     width: 100px;
     height: auto;
-  }
-}
-
-.price-card-content {
-  ion-item {
-    --background: var(--secondary-color);
-    margin-bottom: 5px;
-    border-radius: 10px;
   }
 }
