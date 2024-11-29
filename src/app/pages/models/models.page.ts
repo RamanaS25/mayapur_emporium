@@ -21,13 +21,13 @@ import {
   IonIcon,
   IonCardSubtitle,
   IonChip,
-  IonInput, IonText, IonSearchbar, IonNote } from '@ionic/angular/standalone';
+  IonInput, IonText, IonSearchbar, IonNote, IonButton, IonBadge } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowForward,
   maleOutline,
   femaleOutline,
-  personCircleOutline, shirtOutline, chevronForwardOutline, pricetagOutline, cutOutline, optionsOutline } from 'ionicons/icons';
+  personCircleOutline, shirtOutline, chevronForwardOutline, pricetagOutline, cutOutline, optionsOutline, trashOutline, close } from 'ionicons/icons';
 //interfaces
 interface Model {
   id: number;
@@ -45,7 +45,7 @@ interface Model {
   templateUrl: './models.page.html',
   styleUrls: ['./models.page.scss'],
   standalone: true,
-  imports: [IonNote, IonSearchbar, IonText, 
+  imports: [IonBadge, IonButton, IonNote, IonSearchbar, IonText, 
     IonInput,
     IonChip,
     IonCardSubtitle,
@@ -75,7 +75,7 @@ export class ModelsPage implements OnInit {
   selectedModel: any | null = null;
 
   constructor() {
-    addIcons({shirtOutline,chevronForwardOutline,pricetagOutline,cutOutline,optionsOutline,femaleOutline,personCircleOutline,arrowForward,maleOutline});
+    addIcons({close,personCircleOutline,trashOutline,shirtOutline,chevronForwardOutline,pricetagOutline,cutOutline,optionsOutline,femaleOutline,arrowForward,maleOutline});
     this._models();
   }
 

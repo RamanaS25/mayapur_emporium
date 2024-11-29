@@ -112,19 +112,25 @@
 .price-card-content {
   .price-input-item {
     display: grid;
-    grid-template-columns: 30px 1fr 1fr;
+    grid-template-columns: 30px 1fr 1fr 40px;
     gap: 12px;
     padding: 12px;
     align-items: center;
     
     @media (max-width: 480px) {
-      grid-template-columns: 30px 1fr;
+      grid-template-columns: 30px 1fr 40px;
     }
 
     ion-note {
       font-weight: 500;
       color: var(--ion-color-medium);
       text-align: center;
+    }
+
+    ion-button {
+      padding: 0;
+      margin: 0;
+      height: 36px;
     }
 
     .modern-input {
