@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { 
+import { register } from 'swiper/element/bundle';
+import {
   IonContent,
   IonCard,
   IonCardContent,
@@ -13,10 +14,16 @@ import {
   IonLabel,
   IonBadge,
   IonRange,
-  IonTextarea
+  IonTextarea,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { bagAddOutline, cartOutline, addCircleOutline, arrowBackOutline } from 'ionicons/icons';
+import {
+  bagAddOutline,
+  cartOutline,
+  addCircleOutline,
+  arrowBackOutline,
+} from 'ionicons/icons';
+import { SwiperComponent } from '../swiper/swiper.component';
 
 interface ClothingItem {
   id: number;
@@ -41,7 +48,7 @@ interface StyleOption {
   imageUrl: string;
   priceModifier: number;
 }
-
+register();
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
@@ -61,10 +68,11 @@ interface StyleOption {
     IonLabel,
     IonBadge,
     IonRange,
-    IonTextarea
-  ]
+    IonTextarea,
+    SwiperComponent,
+  ],
 })
-export class OrderComponent { 
+export class OrderComponent {
   @Input() selectedGender: 'male' | 'female' = 'male';
   @Output() selected_outfit = new EventEmitter<boolean>();
   is_editing = false;
@@ -73,6 +81,7 @@ export class OrderComponent {
   selectedNeckline: StyleOption | null = null;
   selectedSleeve: StyleOption | null = null;
   selectedLength = 40; // Default length
+  _selectLength = 'short';
   additionalNotes = '';
 
   clothingItems = {
@@ -83,7 +92,7 @@ export class OrderComponent {
         description: 'Traditional long tunic',
         price: 2500,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/kurta.jpg'
+        imageUrl: 'assets/images/kurta.jpg',
       },
       {
         id: 2,
@@ -91,7 +100,7 @@ export class OrderComponent {
         description: 'Traditional lower garment',
         price: 1500,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/dhoti.jpg'
+        imageUrl: 'assets/images/dhoti.jpg',
       },
       {
         id: 3,
@@ -99,7 +108,7 @@ export class OrderComponent {
         description: 'Formal ethnic coat',
         price: 5000,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/sherwani.jpg'
+        imageUrl: 'assets/images/sherwani.jpg',
       },
       {
         id: 4,
@@ -107,8 +116,8 @@ export class OrderComponent {
         description: 'Loose fitted pants',
         price: 1200,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/pajama.jpg'
-      }
+        imageUrl: 'assets/images/pajama.jpg',
+      },
     ],
     female: [
       {
@@ -117,7 +126,7 @@ export class OrderComponent {
         description: 'Traditional draped garment',
         price: 3500,
         availableSizes: ['Standard'],
-        imageUrl: 'assets/images/saree.jpg'
+        imageUrl: 'assets/images/saree.jpg',
       },
       {
         id: 6,
@@ -125,7 +134,7 @@ export class OrderComponent {
         description: 'Traditional suit set',
         price: 2800,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/salwar.jpg'
+        imageUrl: 'assets/images/salwar.jpg',
       },
       {
         id: 7,
@@ -133,7 +142,7 @@ export class OrderComponent {
         description: 'Traditional skirt with blouse',
         price: 6000,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/lehenga.jpg'
+        imageUrl: 'assets/images/lehenga.jpg',
       },
       {
         id: 8,
@@ -141,9 +150,9 @@ export class OrderComponent {
         description: 'Short tunic top',
         price: 1800,
         availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/kurti.jpg'
-      }
-    ]
+        imageUrl: 'assets/images/kurti.jpg',
+      },
+    ],
   };
 
   cartItems: { item: ClothingItem; size: string; quantity: number }[] = [];
@@ -151,24 +160,24 @@ export class OrderComponent {
   availableFabrics: Fabric[] = [
     {
       id: 1,
-      name: 'Cotton Silk', 
+      name: 'Cotton Silk',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
       pricePerMeter: 800,
-      color: '#F5E6E8'
+      color: '#F5E6E8',
     },
     {
       id: 2,
       name: 'Pure Silk',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
       pricePerMeter: 1200,
-      color: '#D5E4C3'
+      color: '#D5E4C3',
     },
     {
       id: 3,
       name: 'Georgette',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
       pricePerMeter: 600,
-      color: '#B8E1FF'
+      color: '#B8E1FF',
     },
     // Add more fabrics as needed
   ];
@@ -178,13 +187,13 @@ export class OrderComponent {
       id: 1,
       name: 'Round Neck',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 0
+      priceModifier: 0,
     },
     {
       id: 2,
       name: 'V-Neck',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 100
+      priceModifier: 100,
     },
     // Add more necklines as needed
   ];
@@ -194,19 +203,27 @@ export class OrderComponent {
       id: 1,
       name: 'Short Sleeve',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 0
+      priceModifier: 0,
     },
     {
       id: 2,
       name: 'Full Sleeve',
       imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 200
+      priceModifier: 200,
     },
     // Add more sleeves as needed
   ];
 
   constructor() {
-    addIcons({bagAddOutline,arrowBackOutline,cartOutline,addCircleOutline});
+    addIcons({
+      bagAddOutline,
+      arrowBackOutline,
+      cartOutline,
+      addCircleOutline,
+    });
+  }
+  selectLength(length: string) {
+    this._selectLength = length;
   }
 
   selectFabric(fabric: Fabric) {
@@ -236,7 +253,9 @@ export class OrderComponent {
 
   calculateTotalCost(): number {
     const basePrice = this.selectedItem?.price || 0;
-    return basePrice + this.calculateFabricCost() + this.calculateCustomizationCost();
+    return (
+      basePrice + this.calculateFabricCost() + this.calculateCustomizationCost()
+    );
   }
 
   isCustomizationValid(): boolean {
@@ -258,7 +277,7 @@ export class OrderComponent {
       sleeve: this.selectedSleeve,
       length: this.selectedLength,
       notes: this.additionalNotes,
-      totalPrice: this.calculateTotalCost()
+      totalPrice: this.calculateTotalCost(),
     };
 
     // Add to cart logic here
@@ -269,6 +288,4 @@ export class OrderComponent {
   select_outfit() {
     this.selected_outfit.emit(true);
   }
-
-
 }

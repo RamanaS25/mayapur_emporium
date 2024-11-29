@@ -1,0 +1,167 @@
+<ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+  <ion-title>Models</ion-title>
+</ion-toolbar>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="3">
+        <ion-card class="models-list-card">
+          <ion-card-header>
+            <ion-card-title>Models</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list class="models-list">
+              @for (model of allModels; track model) {
+              <ion-item
+                (click)="selectedModel = model"
+                [class.selected]="selectedModel?.id === model.id "
+                lines="none"
+                button
+              >
+                <ion-label>
+                  <h2>{{ model.name }}</h2>
+                </ion-label>
+              </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="9">
+        <ion-card>
+          @if(selectedModel) {
+          <ion-card-header>
+            <ion-card-title
+              >{{ selectedModel.name }}
+              <ion-icon
+                [name]="selectedModel.gender +'-outline' "
+                size="small"
+              ></ion-icon
+            ></ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div style="display: grid; grid-template-columns: 1fr 1fr">
+              <div>
+                <img
+                  src="https://ionicframework.com/docs/img/demos/card-media.png"
+                  alt="pct"
+                />
+              </div>
+            </div>
+            <div class="pictures">
+              @for (item of [1,2,3,4,5]; track $index) {
+              <ion-card>
+                <img
+                  src="https://ionicframework.com/docs/img/demos/card-media.png"
+                  alt="pct"
+                />
+              </ion-card>
+              }
+            </div>
+            <div>
+              <ion-list>
+                <div style="display: grid; grid-template-columns: 1fr 1fr">
+                  <div>
+                    <ion-card class="price-card-content">
+                      <ion-card-header>Basic Price</ion-card-header>
+                      <ion-card-content>
+                        @for (item of
+                        getKeyPairValues(selectedModel.base_price); track
+                        $index) {
+
+                        <ion-item lines="none">
+                          <ion-input
+                            label="size"
+                            [value]="item.key"
+                            labelPlacement="floating"
+                          >
+                          </ion-input>
+                          <ion-input
+                            label="cost"
+                            labelPlacement="floating"
+                            [value]="item.value"
+                          ></ion-input>
+                        </ion-item>
+
+                        }
+                      </ion-card-content>
+                    </ion-card>
+                  </div>
+
+                  <div>
+                    <ion-card class="price-card-content">
+                      <ion-card-header>Fabric Usage</ion-card-header>
+                      <ion-card-content>
+                        @for (item of
+                        getKeyPairValues(selectedModel.fabric_usage); track
+                        $index) {
+
+                        <ion-item lines="none">
+                          <ion-input
+                            label="size"
+                            [value]="item.key"
+                            labelPlacement="floating"
+                          >
+                          </ion-input>
+                          <ion-input
+                            labelPlacement="floating"
+                            label="fabric usage"
+                            [value]="item.value"
+                          ></ion-input>
+                        </ion-item>
+
+                        }
+                      </ion-card-content>
+                    </ion-card>
+                  </div>
+                </div>
+
+                <ion-item>
+                  <ion-label>
+                    <h2>Customizations</h2>
+                    <div class="options-grid">
+                      @for (item of selectedModel.customizations; track item.id)
+                      {
+                      <div
+                        class="option-card"
+                        [class.selected]="selectedModel?.id === item.id"
+                      >
+                        <img
+                          src="https://ionicframework.com/docs/img/demos/card-media.png"
+                          alt="pct"
+                        />
+
+                        <ion-item lines="none" class="item-stacked">
+                          <ion-label>{{ item.name }}</ion-label>
+                          <p>{{ item.base_price }}</p>
+                        </ion-item>
+                      </div>
+                      }
+                    </div>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-label>
+                    <h2>Fabric</h2>
+                    <p>{{ selectedModel.fabric }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+          </ion-card-content>
+          } @else {
+          <ion-card-content class="no-selection">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <h2>Select a model to view details</h2>
+            <p>Choose a model from the list to view their information</p>
+          </ion-card-content>
+          }
+        </ion-card></ion-col
+      >
+    </ion-row>
+  </ion-grid>
+</ion-content>

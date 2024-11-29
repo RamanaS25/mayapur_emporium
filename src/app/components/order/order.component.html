@@ -1,182 +1,205 @@
 <div class="order-container">
+  @switch (is_editing) { @case (false) {
+  <h2 class="section-title">Select Your Outfit</h2>
+  <div class="clothing-grid">
+    @for (item of clothingItems[selectedGender]; track item.id) {
+    <div class="clothing-card">
+      <div class="card-content">
+        <h3 class="item-name">{{ item.name }}</h3>
+        <p class="item-description">{{ item.description }}</p>
 
-        @switch (is_editing) {
-          
-          @case (false) {
-        <h2 class="section-title">Select Your Outfit</h2>
-          <div class="clothing-grid">
-            @for (item of clothingItems[selectedGender]; track item.id) {
-              <div class="clothing-card">
-                <div class="card-content">
-                  
-                  <h3 class="item-name">{{ item.name }}</h3>
-                  <p class="item-description">{{ item.description }}</p>
-                  
-          
+        <ion-button
+          class="add-to-cart"
+          expand="block"
+          (click)="selectedItem = item; is_editing = true"
+        >
+          Select
+          <ion-icon name="bag-add-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+    }
+  </div>
+  } @case (true) {
+  <div class="customization-interface">
+    <div class="customization-header">
+      <ion-button class="back-button" fill="clear" (click)="is_editing = false">
+        <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+        Back to Items
+      </ion-button>
+      <h2>Customize Your {{ selectedItem?.name }}</h2>
+    </div>
 
-                  <ion-button 
-                    class="add-to-cart" 
-                    expand="block"
-                  
-                    (click)="selectedItem = item; is_editing = true">
-                      Select
-                    <ion-icon name="bag-add-outline" slot="end"></ion-icon>
-                  </ion-button>
-                </div>
-              </div>
-            }
+    <div class="customization-content">
+      <app-swiper></app-swiper>
+      <!-- Fabric Selection -->
+      <div class="customization-section">
+        <h3>Select Fabric</h3>
+        <div class="fabric-grid">
+          @for (fabric of availableFabrics; track fabric.id) {
+          <div
+            class="fabric-card"
+            [class.selected]="selectedFabric?.id === fabric.id"
+            (click)="selectFabric(fabric)"
+          >
+            <div
+              class="fabric-swatch"
+              [style.background-image]="'url(' + fabric.imageUrl + ')'"
+            ></div>
+            <div class="fabric-details">
+              <h4>{{ fabric.name }}</h4>
+              <p>₹{{ fabric.pricePerMeter }}/m</p>
+            </div>
           </div>
           }
-          @case (true) {
-            <div class="customization-interface">
-              <div class="customization-header">
-                <ion-button class="back-button" fill="clear" (click)="is_editing = false">
-                  <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-                  Back to Items
-                </ion-button>
-                <h2>Customize Your {{ selectedItem?.name }}</h2>
-              </div>
+        </div>
 
-              <div class="customization-content">
-                <!-- Fabric Selection -->
-                <div class="customization-section">
-                  <h3>Select Fabric</h3>
-                  <div class="fabric-grid">
-                    @for (fabric of availableFabrics; track fabric.id) {
-                      <div class="fabric-card" 
-                           [class.selected]="selectedFabric?.id === fabric.id"
-                           (click)="selectFabric(fabric)">
-                        <div class="fabric-swatch" [style.background-image]="'url(' + fabric.imageUrl + ')'"></div>
-                        <div class="fabric-details">
-                          <h4>{{ fabric.name }}</h4>
-                          <p>₹{{ fabric.pricePerMeter }}/m</p>
-                        </div>
-                      </div>
-                    }
-                  </div>
+        <!-- Length Adjustment -->
+        <div class="style-option">
+          <!-- <ion-range
+            [(ngModel)]="selectedLength"
+            [min]="32"
+            [max]="48"
+            [pin]="true"
+            [snaps]="true"
+            [step]="2"
+            labelPlacement="start"
+          >
+            <div slot="label">Length (inches)</div>
+          </ion-range> -->
+          <div slot="label">
+            Length (inches)
+            <ion-chip
+              (click)="selectLength('short')"
+              [class.active]="_selectLength === 'short'"
+              >short</ion-chip
+            >
+            <ion-chip
+              (click)="selectLength('medium')"
+              [class.active]="_selectLength === 'medium'"
+              >medium</ion-chip
+            >
+            <ion-chip
+              (click)="selectLength('long')"
+              [class.active]="_selectLength === 'long'"
+              >long</ion-chip
+            >
+          </div>
+        </div>
+      </div>
+    </div>
 
-                         <!-- Length Adjustment -->
-                  <div class="style-option">
-                    <ion-range
-                      [(ngModel)]="selectedLength"
-                      [min]="32"
-                      [max]="48"
-                      [pin]="true"
-                      [snaps]="true"
-                      [step]="2"
-                      labelPlacement="start">
-                      <div slot="label">Length (inches)</div>
-                    </ion-range>
-                  </div>
-                </div>
-                </div>
+    <!-- Style Customizations -->
+    <div class="customization-section">
+      <h3>Style Options</h3>
 
-              
-
-                <!-- Style Customizations -->
-                <div class="customization-section">
-                  <h3>Style Options</h3>
-                  
-                  <!-- Neckline Selection -->
-                  <div class="style-option">
-                    <h4>Neckline</h4>
-                    <div class="options-grid">
-                      @for (neckline of availableNecklines; track neckline.id) {
-                        <div class="option-card" 
-                             [class.selected]="selectedNeckline?.id === neckline.id"
-                             (click)="selectNeckline(neckline)">
-                          <img [src]="neckline.imageUrl" [alt]="neckline.name">
-                          <span>{{ neckline.name }}</span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-
-                    <div class="style-option">
-                    <ion-range
-                      [(ngModel)]="selectedLength"
-                      [min]="32"
-                      [max]="48"
-                      [pin]="true"
-                      [snaps]="true"
-                      [step]="2"
-                      labelPlacement="start">
-                      <div slot="label">Depth (inches)</div>
-                    </ion-range>
-                  </div>
-
-                  <!-- Sleeve Style -->
-                  <div class="style-option">
-                    <h4>Sleeves</h4>
-                    <div class="options-grid">
-                      @for (sleeve of availableSleeves; track sleeve.id) {
-                        <div class="option-card" 
-                             [class.selected]="selectedSleeve?.id === sleeve.id"
-                             (click)="selectSleeve(sleeve)">
-                          <img [src]="sleeve.imageUrl" [alt]="sleeve.name">
-                          <span>{{ sleeve.name }}</span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-
-                        <div class="style-option">
-                    <ion-range
-                      [(ngModel)]="selectedLength"
-                      [min]="32"
-                      [max]="48"
-                      [pin]="true"
-                      [snaps]="true"
-                      [step]="2"
-                      labelPlacement="start">
-                      <div slot="label">Size (inches)</div>
-                    </ion-range>
-                  </div>
-
-                <!-- Additional Notes -->
-                <div class="customization-section">
-                  <h3>Additional Notes</h3>
-                  <ion-textarea
-                    [(ngModel)]="additionalNotes"
-                    placeholder="Add any specific instructions or requirements..."
-                    rows="4"
-                    class="notes-input">
-                  </ion-textarea>
-                </div>
-
-                <!-- Price Summary -->
-                <div class="price-summary">
-                  <div class="price-details">
-                    <div class="price-row">
-                      <span>Base Price</span>
-                      <span>₹{{ selectedItem?.price || 0 }}</span>
-                    </div>
-                    <div class="price-row">
-                      <span>Fabric Cost</span>
-                      <span>₹{{ calculateFabricCost() }}</span>
-                    </div>
-                    <div class="price-row">
-                      <span>Customization</span>
-                      <span>₹{{ calculateCustomizationCost() }}</span>
-                    </div>
-                    <div class="price-row total">
-                      <span>Total</span>
-                      <span>₹{{ calculateTotalCost() }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Add to Cart Button -->
-                <ion-button 
-                  expand="block" 
-                  class="add-to-cart-btn"
-                  [disabled]="!isCustomizationValid()"
-                  (click)="select_outfit()">
-                  Add to Cart
-                  <ion-icon name="bag-add-outline" slot="end"></ion-icon>
-                </ion-button>
-              </div>
-            </div>
+      <!-- Neckline Selection -->
+      <div class="style-option">
+        <h4>Neckline</h4>
+        <div class="options-grid">
+          @for (neckline of availableNecklines; track neckline.id) {
+          <div
+            class="option-card"
+            [class.selected]="selectedNeckline?.id === neckline.id"
+            (click)="selectNeckline(neckline)"
+          >
+            <img [src]="neckline.imageUrl" [alt]="neckline.name" />
+            <span>{{ neckline.name }}</span>
+          </div>
           }
-        }
+        </div>
+      </div>
+
+      <div class="style-option">
+        <ion-range
+          [(ngModel)]="selectedLength"
+          [min]="32"
+          [max]="48"
+          [pin]="true"
+          [snaps]="true"
+          [step]="2"
+          labelPlacement="start"
+        >
+          <div slot="label">Depth (inches)</div>
+        </ion-range>
+      </div>
+
+      <!-- Sleeve Style -->
+      <div class="style-option">
+        <h4>Sleeves</h4>
+        <div class="options-grid">
+          @for (sleeve of availableSleeves; track sleeve.id) {
+          <div
+            class="option-card"
+            [class.selected]="selectedSleeve?.id === sleeve.id"
+            (click)="selectSleeve(sleeve)"
+          >
+            <img [src]="sleeve.imageUrl" [alt]="sleeve.name" />
+            <span>{{ sleeve.name }}</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="style-option">
+        <ion-range
+          [(ngModel)]="selectedLength"
+          [min]="32"
+          [max]="48"
+          [pin]="true"
+          [snaps]="true"
+          [step]="2"
+          labelPlacement="start"
+        >
+          <div slot="label">Size (inches)</div>
+        </ion-range>
+      </div>
+
+      <!-- Additional Notes -->
+      <div class="customization-section">
+        <h3>Additional Notes</h3>
+        <ion-textarea
+          [(ngModel)]="additionalNotes"
+          placeholder="Add any specific instructions or requirements..."
+          rows="4"
+          class="notes-input"
+        >
+        </ion-textarea>
+      </div>
+
+      <!-- Price Summary -->
+      <div class="price-summary">
+        <div class="price-details">
+          <div class="price-row">
+            <span>Base Price</span>
+            <span>₹{{ selectedItem?.price || 0 }}</span>
+          </div>
+          <div class="price-row">
+            <span>Fabric Cost</span>
+            <span>₹{{ calculateFabricCost() }}</span>
+          </div>
+          <div class="price-row">
+            <span>Customization</span>
+            <span>₹{{ calculateCustomizationCost() }}</span>
+          </div>
+          <div class="price-row total">
+            <span>Total</span>
+            <span>₹{{ calculateTotalCost() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add to Cart Button -->
+      <ion-button
+        expand="block"
+        class="add-to-cart-btn"
+        [disabled]="!isCustomizationValid()"
+        (click)="select_outfit()"
+      >
+        Add to Cart
+        <ion-icon name="bag-add-outline" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  } }
 </div>

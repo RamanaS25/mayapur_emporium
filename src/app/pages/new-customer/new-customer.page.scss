@@ -1,7 +1,7 @@
 // Variables
-$primary-color: #FF6B98;
-$secondary-color: #FF8FAB;
-$tertiary-color: #FF97B7;
+$primary-color: #ff6b98;
+$secondary-color: #ff8fab;
+$tertiary-color: #ff97b7;
 $text-dark: #2c3e50;
 $bg-light: #f8f9fa;
 $bg-hover: #f1f3f5;
@@ -33,29 +33,28 @@ $transition-standard: all 0.3s ease;
 
 // Welcome Section
 .welcome-text {
-
   padding: 20px;
   text-align: center;
-  
+
   h1 {
-    font-family: 'Great Vibes', cursive;
+    font-family: "Great Vibes", cursive;
     font-size: 3.2rem;
-    color: #7B5E48; // Lighter brown color
+    color: #7b5e48; // Lighter brown color
     margin-bottom: 16px;
     line-height: 1.3;
     text-shadow: 2px 2px 4px rgba(123, 94, 72, 0.1); // Matching shadow color
 
     &::after {
-      content: '❈';
+      content: "❈";
       display: block;
       font-size: 1.5rem;
       margin-top: 10px;
-      color: #7B5E48; // Same lighter brown for consistency
+      color: #7b5e48; // Same lighter brown for consistency
     }
   }
 
   p {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: "Cormorant Garamond", serif;
     font-size: 1.4rem;
     color: $tertiary-color;
     font-weight: 400;
@@ -76,12 +75,12 @@ $transition-standard: all 0.3s ease;
   width: 200px;
   height: 250px;
   margin: 0;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-    
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+
     .icon-container {
       transform: scale(1.1);
     }
@@ -106,7 +105,7 @@ $transition-standard: all 0.3s ease;
   }
 
   &.female {
-    background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+    background: linear-gradient(135deg, #f85b8f 0%, #ff8080fa 100%);
   }
 }
 
@@ -145,7 +144,11 @@ $transition-standard: all 0.3s ease;
 .hover-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -173,7 +176,7 @@ $transition-standard: all 0.3s ease;
   ion-card-header {
     background: #f8f9fa;
     border-bottom: 1px solid #eee;
-    
+
     ion-card-title {
       font-size: 1.3rem;
       color: #2c3e50;
@@ -205,7 +208,7 @@ $transition-standard: all 0.3s ease;
     --padding-bottom: 16px;
     --placeholder-color: #6c757d;
     --color: #2c3e50;
-    
+
     &.ion-valid {
       --background: #f8f9fa;
     }
@@ -221,16 +224,16 @@ $transition-standard: all 0.3s ease;
   padding: 0 1rem;
 
   .continue-btn {
-    --background: #FF6B98;
-    --background-hover: #FF8FAB;
+    --background: #ff6b98;
+    --background-hover: #ff8fab;
     --border-radius: 12px;
     --padding-top: 1rem;
     --padding-bottom: 1rem;
     font-weight: 500;
     box-shadow: 0 4px 15px rgba(255, 107, 152, 0.2);
-    
+
     &:hover {
-      --background: #FF8FAB;
+      --background: #ff8fab;
     }
   }
 }
@@ -238,8 +241,12 @@ $transition-standard: all 0.3s ease;
 // Responsive adjustments
 @media (max-width: 768px) {
   .welcome-text {
-    h1 { font-size: 2.5rem; }
-    p { font-size: 1.2rem; }
+    h1 {
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
   }
 
   .gender-card {
@@ -249,14 +256,18 @@ $transition-standard: all 0.3s ease;
 
   .icon-container {
     padding: 15px;
-    ion-icon { font-size: 36px; }
+    ion-icon {
+      font-size: 36px;
+    }
   }
 
-  .card-content h2 { font-size: 20px; }
+  .card-content h2 {
+    font-size: 20px;
+  }
 
   .modern-form {
     padding: 10px;
-    
+
     .form-title {
       font-size: 1.5rem;
     }
@@ -282,26 +293,26 @@ ion-chip {
   overflow: hidden;
 
   &.active {
-    --background: #FF6B98;
+    --background: #ff6b98;
     --color: white;
     font-weight: 500;
     box-shadow: 0 4px 12px rgba(255, 107, 152, 0.2);
     transform: translateY(-1px);
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 2px;
-      background: #FF8FAB;
+      background: #ff8fab;
     }
   }
 
   &:not(.active) {
     opacity: 0.8;
-    
+
     &:hover {
       --background: #e0e0e0;
       opacity: 1;
@@ -322,7 +333,7 @@ ion-chip {
 
   @media (max-width: 768px) {
     gap: 6px;
-    
+
     ion-chip {
       padding: 4px 8px;
       font-size: 12px;
