@@ -13,9 +13,21 @@
   border-radius: var(--card-border-radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   height: calc(100vh - 120px);
+  min-height: max-content;
+
   overflow: hidden;
   display: flex;
   flex-direction: column;
+
+  ion-card {
+    border-radius: var(--card-border-radius);
+    box-shadow: none;
+    border: 1px solid #e0e0e0;
+  }
+  ion-card-header {
+    color: black;
+    font-weight: bold;
+  }
 
   .custom-searchbar {
     --background: #f8f9fa;
@@ -116,7 +128,7 @@
     gap: 12px;
     padding: 12px;
     align-items: center;
-    
+
     @media (max-width: 480px) {
       grid-template-columns: 30px 1fr 40px;
     }
@@ -136,7 +148,7 @@
     .modern-input {
       --border-radius: 8px;
       --background: var(--ion-color-light);
-      
+
       &[readonly] {
         opacity: 0.8;
       }
@@ -147,10 +159,16 @@
     }
   }
 }
+.save-button {
+  display: flex;
+  float: right;
+  margin-bottom: 10px;
+}
 
 .card-picture {
   width: 150px;
   height: auto;
+  border: none;
 }
 .pictures {
   display: flex;
@@ -160,5 +178,70 @@
   .ion-card {
     width: 100px;
     height: auto;
+  }
+}
+.custom {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
+  padding: 12px;
+  align-items: center;
+  .custom-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr 40px;
+    gap: 12px;
+    padding: 12px;
+    align-items: center;
+    .modern-input {
+      --border-radius: 8px;
+      --background: var(--ion-color-light);
+    }
+  }
+}
+.info-list {
+  background: transparent;
+  padding: 10px;
+  border-radius: 8px;
+  ion-item {
+    --background: var(--ion-color-light);
+    margin-bottom: 8px;
+    border-radius: 8px;
+
+    ion-icon {
+      color: var(--ion-color-primary);
+      font-size: 20px;
+    }
+
+    ion-label {
+      display: flex;
+      flex-direction: column;
+
+      .info-label {
+        color: var(--ion-color-medium);
+        font-size: 0.9em;
+      }
+
+      .info-value {
+        font-weight: 500;
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+ion-checkbox {
+  --checkbox-background-checked: #ff6b98;
+}
+
+ion-checkbox::part(container) {
+  border-radius: 20px;
+  border: 2px solid #ff6b98;
+}
+
+.fabric-list {
+  background-color: transparent;
+  padding: 5px;
+  ion-item {
+    border-radius: 15px;
   }
 }

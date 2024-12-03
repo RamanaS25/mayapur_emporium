@@ -2,6 +2,7 @@ import { Component, inject, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModelsService } from 'src/app/services/models/models.service';
+import { ChangeModelComponent } from 'src/app/components/change-model/change-model.component';
 import {
   IonContent,
   IonTitle,
@@ -19,15 +20,29 @@ import {
   IonItem,
   IonLabel,
   IonIcon,
-  IonCardSubtitle,
   IonChip,
-  IonInput, IonText, IonSearchbar, IonNote, IonButton, IonBadge } from '@ionic/angular/standalone';
+  IonInput,
+  IonNote,
+  IonBadge,
+  IonModal,
+  IonCheckbox,
+  IonButton,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowForward,
   maleOutline,
   femaleOutline,
-  personCircleOutline, shirtOutline, chevronForwardOutline, pricetagOutline, cutOutline, optionsOutline, trashOutline, close } from 'ionicons/icons';
+  personCircleOutline,
+  shirtOutline,
+  chevronForwardOutline,
+  pricetagOutline,
+  cutOutline,
+  optionsOutline,
+  trashOutline,
+  close,
+  addCircleOutline,
+} from 'ionicons/icons';
 //interfaces
 interface Model {
   id: number;
@@ -40,15 +55,27 @@ interface Model {
   base_price: [{}];
   model_pictures: {};
 }
+
+interface Fabric {
+  id: number;
+  created_at: Date;
+  name: string;
+  img: string;
+  price_per_meter: number;
+}
 @Component({
   selector: 'app-models',
   templateUrl: './models.page.html',
   styleUrls: ['./models.page.scss'],
   standalone: true,
-  imports: [IonBadge, IonButton, IonNote, IonSearchbar, IonText, 
+  imports: [
+    IonButton,
+    IonCheckbox,
+    IonModal,
+    IonBadge,
+    IonNote,
     IonInput,
     IonChip,
-    IonCardSubtitle,
     IonIcon,
     IonLabel,
     IonItem,
@@ -67,30 +94,103 @@ interface Model {
     CommonModule,
     FormsModule,
     IonMenuButton,
+    ChangeModelComponent,
   ],
 })
 export class ModelsPage implements OnInit {
   api = inject(ModelsService);
   models: Model[] | null = null;
+  fabrics: any | null = null;
   selectedModel: any | null = null;
-
+  isModalOpen: boolean = false;
+  category: string = '';
+  newModel: any;
   constructor() {
-    addIcons({close,personCircleOutline,trashOutline,shirtOutline,chevronForwardOutline,pricetagOutline,cutOutline,optionsOutline,femaleOutline,arrowForward,maleOutline});
+    addIcons({
+      addCircleOutline,
+      close,
+      personCircleOutline,
+      trashOutline,
+      shirtOutline,
+      chevronForwardOutline,
+      pricetagOutline,
+      cutOutline,
+      optionsOutline,
+      femaleOutline,
+      arrowForward,
+      maleOutline,
+    });
     this._models();
+    this._fabrics();
   }
 
   async _models() {
     let x = await this.api.getModels();
     this.models = x;
     this.selectedModel = x[0];
-    console.log(this.models);
+    this.newModel = this.selectedModel;
+    console.log(this.selectedModel);
+  }
+  async _fabrics() {
+    let x = await this.api.getFabrics();
+    this.fabrics = x;
+    console.log('aa', this.fabrics);
   }
 
   get allModels() {
     return this.models;
   }
+
+  get allFabrics() {
+    return this.fabrics;
+  }
+
+  get filterFabric() {
+    let x = this.getKeyPairValues(this.selectedModel?.fabrics);
+    x = x.map((item: { key: any; value: any }) => {
+      return item.key;
+    });
+    let filter_fabric = this.allFabrics?.filter(
+      (item: any) => !x.includes(item.name)
+    );
+    return filter_fabric;
+  }
+
+  addFabric(name: string, cost: number) {
+    let x = this.getKeyPairValues(this.selectedModel.fabrics);
+    console.log(x);
+    x.push({ key: name, value: cost });
+    this.selectedModel.fabrics = this.restoreJsonFormat(x);
+    this.addNewFabric('fabrics', this.selectedModel);
+    console.log(this.selectedModel);
+    console.log(this.selectedModel.fabrics);
+  }
+
+  async addNewFabric(category: string, fabric: any) {
+    let x = await this.api.updateModel(category, fabric);
+  }
+
   getKeyPairValues(input: any) {
     return Object.entries(input).map(([key, value]) => ({ key, value }));
+  }
+  restoreJsonFormat(input: { key: string; value: any }[]) {
+    return input.reduce((acc: Record<string, any>, { key, value }) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+  }
+
+  delete(key: string, value: any, category: string) {
+    console.log(key);
+    let x = this.getKeyPairValues(this.selectedModel[category]).filter(
+      (item) => item.key !== key
+    );
+    this.selectedModel[category] = this.restoreJsonFormat(x);
+    this.deleteFromDB(category, this.selectedModel);
+  }
+
+  async deleteFromDB(category: string, input: any) {
+    let x = await this.api.updateModel(category, input);
   }
 
   ngOnInit() {}

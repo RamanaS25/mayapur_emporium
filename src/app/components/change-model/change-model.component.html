@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ category }}</ion-title></ion-toolbar
+  ></ion-header
+>
+<div lines="none" class="price-input-item">
+  <ion-input
+    mode="md"
+    class="modern-input"
+    fill="outline"
+    label="Name"
+    labelPlacement="floating"
+    [(ngModel)]="name"
+  >
+  </ion-input>
+  <ion-input
+    mode="md"
+    class="modern-input"
+    fill="outline"
+    label="Cost"
+    labelPlacement="floating"
+    [(ngModel)]="cost"
+    type="number"
+  >
+    <div slot="start">₹</div>
+  </ion-input>
+</div>
+<ion-button (click)="addNew()" class="save-button">save</ion-button>

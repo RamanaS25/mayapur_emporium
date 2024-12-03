@@ -32,42 +32,73 @@
         </ion-card>
       </ion-col>
       <ion-col size="9">
-        <ion-card>
-          @if(selectedModel) {
-          <ion-card-header>
-            <ion-card-title
-              >{{ selectedModel.name }}
-              <ion-icon
-                [name]="selectedModel.gender +'-outline' "
-                size="small"
-              ></ion-icon
-            ></ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <div style="display: grid; grid-template-columns: 1fr 1fr">
-              <div>
-                <img
-                  src="https://ionicframework.com/docs/img/demos/card-media.png"
-                  alt="pct"
-                />
-              </div>
-            </div>
-            <div class="pictures">
-              @for (item of [1,2,3,4,5]; track $index) {
-              <ion-card>
-                <img
-                  src="https://ionicframework.com/docs/img/demos/card-media.png"
-                  alt="pct"
-                />
-              </ion-card>
-              }
-            </div>
-            <div>
-              <ion-list>
-              
+        <ion-card class="models-list-card">
+          <div style="height: calc(100vh - 120px); overflow-y: auto">
+            <div class="sticky-searchbar">
+              @if(selectedModel) {
+              <ion-card-content>
+                <div style="display: grid; grid-template-columns: 600px 1fr">
                   <div>
+                    <img
+                      src="https://ionicframework.com/docs/img/demos/card-media.png"
+                      alt="pct"
+                    />
+                  </div>
+                  <div>
+                    <ion-list class="info-list">
+                      <ion-item lines="none">
+                        <ion-label>
+                          <span class="info-label"> name </span>
+                          <span class="info-value">
+                            {{ selectedModel.name }}
+                          </span>
+                        </ion-label>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label>
+                          <span class="info-label"> gender </span>
+                          <span class="info-value">
+                            {{ selectedModel.gender }}
+                          </span>
+                        </ion-label>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label>
+                          <span class="info-label"> created at </span>
+
+                          <span class="info-value">
+                            {{ selectedModel.created_at | date:'mediumDate'}}
+                          </span>
+                        </ion-label>
+                      </ion-item>
+                    </ion-list>
+                  </div>
+                </div>
+                <div class="pictures">
+                  @for (item of [1,2,3,4,5]; track $index) {
+                  <ion-card>
+                    <img
+                      src="https://ionicframework.com/docs/img/demos/card-media.png"
+                      alt="pct"
+                    />
+                  </ion-card>
+                  }
+                </div>
+                <div>
+                  <ion-list>
+                    <!-- basic_price -->
                     <ion-card class="price-card-content">
-                      <ion-card-header>Basic Price</ion-card-header>
+                      <ion-toolbar style="--background: transparent">
+                        <ion-card-header>Base Price</ion-card-header>
+                        <ion-buttons slot="end">
+                          <ion-chip
+                            (click)=" category = 'base_price'; isModalOpen = true"
+                          >
+                            Add New
+                          </ion-chip>
+                        </ion-buttons>
+                      </ion-toolbar>
+
                       <ion-card-content>
                         @for (item of
                         getKeyPairValues(selectedModel.base_price); track
@@ -95,102 +126,234 @@
                           >
                             <div slot="start">₹</div>
                           </ion-input>
-                      
-                          <ion-badge color="danger" button>
+
+                          <ion-badge
+                            color="danger"
+                            button
+                            (click)="delete(item.key, item.value, 'base_price')"
+                          >
                             <ion-icon name="close" color="light"></ion-icon>
                           </ion-badge>
-                   
+                        </div>
+
+                        }
+                        <ion-buttons class="save-button">
+                          <ion-button>save</ion-button>
+                        </ion-buttons>
+                      </ion-card-content>
+                    </ion-card>
+
+                    <!-- fabric_usage -->
+                    <ion-card class="price-card-content">
+                      <ion-toolbar style="--background: transparent">
+                        <ion-card-header>Fabric Usage</ion-card-header>
+                        <ion-buttons slot="end">
+                          <ion-chip
+                            (click)=" category = 'fabric_usage'; isModalOpen = true"
+                          >
+                            Add New
+                          </ion-chip>
+                        </ion-buttons>
+                      </ion-toolbar>
+                      <ion-card-content>
+                        @for (item of
+                        getKeyPairValues(selectedModel.fabric_usage); track
+                        $index) {
+
+                        <div lines="none" class="price-input-item">
+                          <ion-note>{{ $index + 1 }}.</ion-note>
+                          <ion-input
+                            mode="md"
+                            class="modern-input"
+                            fill="outline"
+                            label="Size"
+                            [value]="item.key"
+                            labelPlacement="floating"
+                          >
+                          </ion-input>
+                          <ion-input
+                            mode="md"
+                            class="modern-input"
+                            fill="outline"
+                            label="Fabric Usage"
+                            labelPlacement="floating"
+                            [value]="item.value"
+                            type="number"
+                          >
+                            <div slot="start">₹</div>
+                          </ion-input>
+                          <ion-badge
+                            color="danger"
+                            button
+                            (click)="delete(item.key, item.value, 'fabric_usage')"
+                          >
+                            <ion-icon name="close" color="light"></ion-icon>
+                          </ion-badge>
                         </div>
 
                         }
                       </ion-card-content>
                     </ion-card>
-                  </div>
 
-                  <div>
-                    <ion-card class="price-card-content">
-                      <ion-card-header>Fabric Usage</ion-card-header>
-                      <ion-card-content>
-                        @for (item of
-                        getKeyPairValues(selectedModel.fabric_usage); track
+                    <!-- customizations -->
+                    <ion-card>
+                      <ion-toolbar style="--background: transparent">
+                        <ion-card-header>Customizations</ion-card-header>
+                        <ion-buttons slot="end">
+                          <ion-chip
+                            (click)=" category = 'customizations'; isModalOpen = true"
+                          >
+                            Add New
+                          </ion-chip>
+                        </ion-buttons>
+                      </ion-toolbar>
+                      <div>
+                        @for (item of selectedModel.customizations; track
                         $index) {
-                       
-                       <div lines="none" class="price-input-item">
-                        <ion-note>{{ $index + 1 }}.</ion-note>
-                        <ion-input
-                          mode="md"
-                          class="modern-input"
-                          fill="outline"
-                          label="Size"
-                          [value]="item.key"
-                          labelPlacement="floating"
-                        
-                        >
-                        </ion-input>
-                        <ion-input
-                         mode="md"
-                          class="modern-input"
-                          fill="outline"
-                          label="Fabric Usage"
-                          labelPlacement="floating"
-                          [value]="item.value"
-                          type="number"
-                        >
-                          <div slot="start">₹</div>
-                        </ion-input>
-                        <ion-badge color="danger" button>
-                          <ion-icon name="close" color="light"></ion-icon>
-                        </ion-badge>
-                      </div>
+                        <div class="custom">
+                          <ion-card class="card-picture">
+                            <img
+                              src="https://ionicframework.com/docs/img/demos/card-media.png"
+                              alt="pct"
+                            />
+                          </ion-card>
+                          <div class="custom-input">
+                            <ion-input
+                              mode="md"
+                              class="modern-input"
+                              fill="outline"
+                              label="name"
+                              [value]="item.name"
+                              labelPlacement="floating"
+                            >
+                            </ion-input>
+                            <ion-input
+                              mode="md"
+                              class="modern-input"
+                              fill="outline"
+                              label="price"
+                              [value]="item.base_price"
+                              labelPlacement="floating"
+                            >
+                              <div slot="start">₹</div>
+                            </ion-input>
+                            <ion-badge color="danger" button>
+                              <ion-icon name="close" color="light"></ion-icon>
+                            </ion-badge>
+                          </div>
+                        </div>
 
                         }
-                      </ion-card-content>
-                    </ion-card>
-                  </div>
-    
-
-                <ion-item>
-                  <ion-label>
-                    <h2>Customizations</h2>
-                    <div class="options-grid">
-                      @for (item of selectedModel.customizations; track item.id)
-                      {
-                      <div
-                        class="option-card"
-                        [class.selected]="selectedModel?.id === item.id"
-                      >
-                        <img
-                          src="https://ionicframework.com/docs/img/demos/card-media.png"
-                          alt="pct"
-                        />
-
-                        <ion-item lines="none" class="item-stacked">
-                          <ion-label>{{ item.name }}</ion-label>
-                          <p>{{ item.base_price }}</p>
-                        </ion-item>
                       </div>
+                    </ion-card>
+
+                    <!-- fabric -->
+                    <ion-card>
+                      <ion-toolbar style="--background: transparent">
+                        <ion-card-header>Fabric</ion-card-header>
+                        <ion-buttons slot="end">
+                          <ion-chip
+                            (click)=" category = 'fabrics'; isModalOpen = true"
+                          >
+                            Add New
+                          </ion-chip>
+                        </ion-buttons>
+                      </ion-toolbar>
+                      @for (item of getKeyPairValues(selectedModel.fabrics);
+                      track $index) {
+
+                      <div class="custom">
+                        <ion-card class="card-picture">
+                          <img
+                            src="https://ionicframework.com/docs/img/demos/card-media.png"
+                            alt="pct"
+                          />
+                        </ion-card>
+                        <div class="custom-input">
+                          <ion-input
+                            mode="md"
+                            class="modern-input"
+                            fill="outline"
+                            label="name"
+                            [value]="item.key"
+                            labelPlacement="floating"
+                            [disabled]="true"
+                          >
+                          </ion-input>
+                          <ion-input
+                            mode="md"
+                            class="modern-input"
+                            fill="outline"
+                            label="price per meter"
+                            [value]="item.value"
+                            labelPlacement="floating"
+                            [disabled]="true"
+                          >
+                            <div slot="start">₹</div>
+                          </ion-input>
+                          <ion-badge
+                            color="danger"
+                            button
+                            (click)="delete(item.key, item.value, 'fabrics')"
+                          >
+                            <ion-icon name="close" color="light"></ion-icon>
+                          </ion-badge>
+                        </div>
+                      </div>
+
                       }
-                    </div>
-                  </ion-label>
-                </ion-item>
-                <ion-item>
-                  <ion-label>
-                    <h2>Fabric</h2>
-                    <p>{{ selectedModel.fabric }}</p>
-                  </ion-label>
-                </ion-item>
-              </ion-list>
+                    </ion-card>
+                  </ion-list>
+                </div>
+              </ion-card-content>
+              } @else {
+              <ion-card-content class="no-selection">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                <h2>Select a model to view details</h2>
+                <p>Choose a model from the list to view their information</p>
+              </ion-card-content>
+              }
             </div>
-          </ion-card-content>
-          } @else {
-          <ion-card-content class="no-selection">
-            <ion-icon name="person-circle-outline"></ion-icon>
-            <h2>Select a model to view details</h2>
-            <p>Choose a model from the list to view their information</p>
-          </ion-card-content>
-          }
-        </ion-card></ion-col
-      >
+          </div>
+        </ion-card>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
+
+<ion-modal
+  [isOpen]="isModalOpen"
+  (didDismiss)="isModalOpen = false"
+  style="
+    --border-radius: 10px;
+    backdrop-filter: blur(10px);
+    --background: rgba(255, 215, 231, 1);
+  "
+>
+  <ng-template>
+    @if (category !== 'fabrics') {
+    <app-change-model
+      [category]="category"
+      [model]="selectedModel"
+    ></app-change-model>
+    }@else {
+    <div style="padding: 20px">
+      @for (item of filterFabric; track $index) {
+      <ion-list class="fabric-list">
+        <ion-item lines="none">
+          <ion-label>
+            <h2>{{ item?.name }}</h2>
+            <small> ₹ {{ item?.price_per_meter }}</small>
+          </ion-label>
+          <ion-checkbox
+            slot="end"
+            (click)="addFabric(item?.name, item?.price_per_meter)"
+          ></ion-checkbox>
+        </ion-item>
+      </ion-list>
+      }
+    </div>
+    }
+  </ng-template>
+  ></ion-modal
+>
