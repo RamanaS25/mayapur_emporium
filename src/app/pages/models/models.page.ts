@@ -169,6 +169,12 @@ export class ModelsPage implements OnInit {
   async addNewFabric(category: string, fabric: any) {
     let x = await this.api.updateModel(category, fabric);
   }
+  saveChanges(category: string) {
+    let x = this.restoreJsonFormat(
+      this.getKeyPairValues(this.selectedModel.base_price)
+    );
+    console.log(x);
+  }
 
   getKeyPairValues(input: any) {
     return Object.entries(input).map(([key, value]) => ({ key, value }));
@@ -191,6 +197,19 @@ export class ModelsPage implements OnInit {
 
   async deleteFromDB(category: string, input: any) {
     let x = await this.api.updateModel(category, input);
+  }
+
+  removeItemByName(array: any[], name: string): any[] {
+    return array.filter((item) => item.name !== name);
+  }
+
+  deleteCustomization(category: string, name: string) {
+    this.selectedModel.customizations = this.removeItemByName(
+      this.selectedModel.customizations,
+      name
+    );
+    this.deleteFromDB(category, this.selectedModel);
+    console.log(this.selectedModel.customizations);
   }
 
   ngOnInit() {}

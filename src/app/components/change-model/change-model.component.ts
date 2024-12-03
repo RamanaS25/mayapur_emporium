@@ -10,7 +10,11 @@ import {
   IonButton,
 } from '@ionic/angular/standalone';
 import { ModelsService } from 'src/app/services/models/models.service';
-
+interface Customization {
+  name: string;
+  img_url: string;
+  base_price: number;
+}
 @Component({
   selector: 'app-change-model',
   templateUrl: './change-model.component.html',
@@ -34,10 +38,20 @@ export class ChangeModelComponent implements OnInit {
   name: string = '';
   cost: number = 0;
 
+  newCustomization: Customization = {
+    name: '',
+    img_url: 'link',
+    base_price: 0,
+  };
+
   constructor() {}
 
   async addNew() {
-    this.addToModel();
+    if (this.category === 'customizations') {
+      this.test();
+    } else {
+      this.addToModel();
+    }
     let x = await this.api.updateModel(this.category, this.model);
   }
 
@@ -49,8 +63,29 @@ export class ChangeModelComponent implements OnInit {
     console.log(this.model);
   }
 
+  test() {
+    let x = this.addItems(this.model.customizations, this.newCustomization);
+    this.model.customizations = x;
+    console.log(x);
+  }
+  addItems<T>(array: T[], newItems: T | T[]): T[] {
+    if (Array.isArray(newItems)) {
+      return [...array, ...newItems]; // Добавление массива элементов
+    } else {
+      return [...array, newItems]; // Добавление одного элемента
+    }
+  }
+
   getKeyPairValues(input: any) {
     return Object.entries(input).map(([key, value]) => ({ key, value }));
+  }
+
+  convertToKeyValue(data: any[], keyField: string) {
+    return data.reduce((acc, item) => {
+      const { [keyField]: key, ...rest } = item;
+      acc[key] = rest;
+      return acc;
+    }, {});
   }
 
   restoreJsonFormat(input: { key: string; value: any }[]) {
