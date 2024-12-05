@@ -170,16 +170,7 @@
   height: auto;
   border: none;
 }
-.pictures {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
 
-  .ion-card {
-    width: 100px;
-    height: auto;
-  }
-}
 .custom {
   display: grid;
   grid-template-columns: 200px 1fr;

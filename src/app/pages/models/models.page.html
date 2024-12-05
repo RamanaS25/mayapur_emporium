@@ -86,13 +86,10 @@
                 </div>
                 <div class="pictures">
                   @for (item of [1,2,3,4,5]; track $index) {
-              
                     <img
                       src="https://ionicframework.com/docs/img/demos/card-media.png"
-                      alt="pct"
-                      style="width: 150px; height: auto; object-fit: contain;"
+                      alt="Model picture {{$index + 1}}"
                     />
-                 
                   }
                 </div>
                 <div>

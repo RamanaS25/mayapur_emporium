@@ -2,12 +2,13 @@
   @switch (is_editing) { @case (false) {
   <h2 class="section-title">Select Your Outfit</h2>
   <div class="clothing-grid">
-    @for (item of clothingItems[selectedGender]; track item.id) {
+    @for (item of models; track item.id) {
     <div class="clothing-card">
+      <div class="image-container">
+        <img [src]="'https://ionicframework.com/docs/img/demos/card-media.png'" [alt]="item.name">
+      </div>
       <div class="card-content">
         <h3 class="item-name">{{ item.name }}</h3>
-        <p class="item-description">{{ item.description }}</p>
-
         <ion-button
           class="add-to-cart"
           expand="block"
@@ -32,58 +33,48 @@
 
     <div class="customization-content">
       <app-swiper></app-swiper>
+        <ion-item>
+           <ion-img style="width: 200px; height: auto; margin-right: 10px;" [src]="'https://ionicframework.com/docs/img/demos/card-media.png'"></ion-img>
+           <ion-img style="width: 200px; height: auto; margin-right: 10px;" [src]="'https://ionicframework.com/docs/img/demos/card-media.png'"></ion-img>
+           <ion-img style="width: 200px; height: auto; margin-right: 10px;" [src]="'https://ionicframework.com/docs/img/demos/card-media.png'"></ion-img>
+        </ion-item>
       <!-- Fabric Selection -->
       <div class="customization-section">
         <h3>Select Fabric</h3>
         <div class="fabric-grid">
-          @for (fabric of availableFabrics; track fabric.id) {
+          @for (fabric of selectedItem?.fabrics; track fabric.key) {
           <div
             class="fabric-card"
-            [class.selected]="selectedFabric?.id === fabric.id"
+            [class.selected]="selectedFabric?.key === fabric.key"
             (click)="selectFabric(fabric)"
           >
             <div
               class="fabric-swatch"
-              [style.background-image]="'url(' + fabric.imageUrl + ')'"
+              [style.background-image]="'url(https://ionicframework.com/docs/img/demos/card-media.png)'"
             ></div>
             <div class="fabric-details">
-              <h4>{{ fabric.name }}</h4>
-              <p>₹{{ fabric.pricePerMeter }}/m</p>
+              <h4>{{ fabric.key }}</h4>
+              <p>₹{{ fabric.value }}/m</p>
             </div>
           </div>
           }
         </div>
 
-        <!-- Length Adjustment -->
+        <!-- Length Selection -->
         <div class="style-option">
-          <!-- <ion-range
-            [(ngModel)]="selectedLength"
-            [min]="32"
-            [max]="48"
-            [pin]="true"
-            [snaps]="true"
-            [step]="2"
-            labelPlacement="start"
-          >
-            <div slot="label">Length (inches)</div>
-          </ion-range> -->
+          <h4>Select Size & Fabric Usage</h4>
           <div slot="label">
-            Length (inches)
+            @for (size of selectedItem?.base_price; track size.key) {
             <ion-chip
-              (click)="selectLength('short')"
-              [class.active]="_selectLength === 'short'"
-              >short</ion-chip
+              (click)="selectLength(size.key)"
+              [class.active]="_selectLength === size.key"
             >
-            <ion-chip
-              (click)="selectLength('medium')"
-              [class.active]="_selectLength === 'medium'"
-              >medium</ion-chip
-            >
-            <ion-chip
-              (click)="selectLength('long')"
-              [class.active]="_selectLength === 'long'"
-              >long</ion-chip
-            >
+              {{ size.key }} 
+              <span class="fabric-usage">
+                ({{ getFabricUsageForSize(size.key) }}m)
+              </span>
+            </ion-chip>
+            }
           </div>
         </div>
       </div>
@@ -93,66 +84,20 @@
     <div class="customization-section">
       <h3>Style Options</h3>
 
-      <!-- Neckline Selection -->
+      <!-- Customization Selection -->
       <div class="style-option">
-        <h4>Neckline</h4>
         <div class="options-grid">
-          @for (neckline of availableNecklines; track neckline.id) {
+          @for (custom of selectedItem?.customizations; track custom.name) {
           <div
             class="option-card"
-            [class.selected]="selectedNeckline?.id === neckline.id"
-            (click)="selectNeckline(neckline)"
+            [class.selected]="selectedCustomization?.name === custom.name"
+            (click)="selectNeckline(custom)"
           >
-            <img [src]="neckline.imageUrl" [alt]="neckline.name" />
-            <span>{{ neckline.name }}</span>
+            <img src="https://ionicframework.com/docs/img/demos/card-media.png" [alt]="custom.name" />
+            <span>{{ custom.name }}</span>
           </div>
           }
         </div>
-      </div>
-
-      <div class="style-option">
-        <ion-range
-          [(ngModel)]="selectedLength"
-          [min]="32"
-          [max]="48"
-          [pin]="true"
-          [snaps]="true"
-          [step]="2"
-          labelPlacement="start"
-        >
-          <div slot="label">Depth (inches)</div>
-        </ion-range>
-      </div>
-
-      <!-- Sleeve Style -->
-      <div class="style-option">
-        <h4>Sleeves</h4>
-        <div class="options-grid">
-          @for (sleeve of availableSleeves; track sleeve.id) {
-          <div
-            class="option-card"
-            [class.selected]="selectedSleeve?.id === sleeve.id"
-            (click)="selectSleeve(sleeve)"
-          >
-            <img [src]="sleeve.imageUrl" [alt]="sleeve.name" />
-            <span>{{ sleeve.name }}</span>
-          </div>
-          }
-        </div>
-      </div>
-
-      <div class="style-option">
-        <ion-range
-          [(ngModel)]="selectedLength"
-          [min]="32"
-          [max]="48"
-          [pin]="true"
-          [snaps]="true"
-          [step]="2"
-          labelPlacement="start"
-        >
-          <div slot="label">Size (inches)</div>
-        </ion-range>
       </div>
 
       <!-- Additional Notes -->
@@ -172,10 +117,10 @@
         <div class="price-details">
           <div class="price-row">
             <span>Base Price</span>
-            <span>₹{{ selectedItem?.price || 0 }}</span>
+            <span>₹{{ getBasePrice() }}</span>
           </div>
           <div class="price-row">
-            <span>Fabric Cost</span>
+            <span>Fabric ({{ getFabricConsumption() }}m × ₹{{ selectedFabric?.value || 0 }}/m)</span>
             <span>₹{{ calculateFabricCost() }}</span>
           </div>
           <div class="price-row">

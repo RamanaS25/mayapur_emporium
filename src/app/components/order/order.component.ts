@@ -14,8 +14,7 @@ import {
   IonLabel,
   IonBadge,
   IonRange,
-  IonTextarea,
-} from '@ionic/angular/standalone';
+  IonTextarea, IonItem, IonImg } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   bagAddOutline,
@@ -25,36 +24,48 @@ import {
 } from 'ionicons/icons';
 import { SwiperComponent } from '../swiper/swiper.component';
 
-interface ClothingItem {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  availableSizes: string[];
-  imageUrl?: string;
-}
-
 interface Fabric {
-  id: number;
-  name: string;
-  imageUrl: string;
-  pricePerMeter: number;
-  color: string;
+  key: string;
+  value: number;
 }
 
-interface StyleOption {
-  id: number;
+interface Customization {
   name: string;
-  imageUrl: string;
-  priceModifier: number;
+  img_url: string;
+  base_price: number;
 }
+
+interface BasePrice {
+  key: string;
+  value: string | number;
+}
+
+interface FabricUsage {
+  key: string;
+  value: number;
+}
+
+interface Model {
+  id: number;
+  created_at: string;
+  name: string;
+  fabrics: Fabric[];
+  customizations: Customization[];
+  gender: string;
+  base_price: BasePrice[];
+  fabric_usage: FabricUsage[];
+  model_pictures: {
+    pic_1: string;
+  };
+}
+
 register();
 @Component({
   selector: 'app-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonImg, IonItem, 
     CommonModule,
     FormsModule,
     IonContent,
@@ -74,145 +85,14 @@ register();
 })
 export class OrderComponent {
   @Input() selectedGender: 'male' | 'female' = 'male';
+  @Input() models: Model[] = [];
   @Output() selected_outfit = new EventEmitter<boolean>();
   is_editing = false;
-  selectedItem: ClothingItem | null = null;
+  selectedItem: Model | null = null;
   selectedFabric: Fabric | null = null;
-  selectedNeckline: StyleOption | null = null;
-  selectedSleeve: StyleOption | null = null;
-  selectedLength = 40; // Default length
-  _selectLength = 'short';
+  selectedCustomization: Customization | null = null;
+  _selectLength: string = 'small';
   additionalNotes = '';
-
-  clothingItems = {
-    male: [
-      {
-        id: 1,
-        name: 'Kurta',
-        description: 'Traditional long tunic',
-        price: 2500,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/kurta.jpg',
-      },
-      {
-        id: 2,
-        name: 'Dhoti',
-        description: 'Traditional lower garment',
-        price: 1500,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/dhoti.jpg',
-      },
-      {
-        id: 3,
-        name: 'Sherwani',
-        description: 'Formal ethnic coat',
-        price: 5000,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/sherwani.jpg',
-      },
-      {
-        id: 4,
-        name: 'Pajama',
-        description: 'Loose fitted pants',
-        price: 1200,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/pajama.jpg',
-      },
-    ],
-    female: [
-      {
-        id: 5,
-        name: 'Saree',
-        description: 'Traditional draped garment',
-        price: 3500,
-        availableSizes: ['Standard'],
-        imageUrl: 'assets/images/saree.jpg',
-      },
-      {
-        id: 6,
-        name: 'Salwar Kameez',
-        description: 'Traditional suit set',
-        price: 2800,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/salwar.jpg',
-      },
-      {
-        id: 7,
-        name: 'Lehenga',
-        description: 'Traditional skirt with blouse',
-        price: 6000,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/lehenga.jpg',
-      },
-      {
-        id: 8,
-        name: 'Kurti',
-        description: 'Short tunic top',
-        price: 1800,
-        availableSizes: ['S', 'M', 'L', 'XL'],
-        imageUrl: 'assets/images/kurti.jpg',
-      },
-    ],
-  };
-
-  cartItems: { item: ClothingItem; size: string; quantity: number }[] = [];
-
-  availableFabrics: Fabric[] = [
-    {
-      id: 1,
-      name: 'Cotton Silk',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      pricePerMeter: 800,
-      color: '#F5E6E8',
-    },
-    {
-      id: 2,
-      name: 'Pure Silk',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      pricePerMeter: 1200,
-      color: '#D5E4C3',
-    },
-    {
-      id: 3,
-      name: 'Georgette',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      pricePerMeter: 600,
-      color: '#B8E1FF',
-    },
-    // Add more fabrics as needed
-  ];
-
-  availableNecklines: StyleOption[] = [
-    {
-      id: 1,
-      name: 'Round Neck',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 0,
-    },
-    {
-      id: 2,
-      name: 'V-Neck',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 100,
-    },
-    // Add more necklines as needed
-  ];
-
-  availableSleeves: StyleOption[] = [
-    {
-      id: 1,
-      name: 'Short Sleeve',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 0,
-    },
-    {
-      id: 2,
-      name: 'Full Sleeve',
-      imageUrl: 'https://ionicframework.com/docs/img/demos/card-media.png',
-      priceModifier: 200,
-    },
-    // Add more sleeves as needed
-  ];
 
   constructor() {
     addIcons({
@@ -222,6 +102,12 @@ export class OrderComponent {
       addCircleOutline,
     });
   }
+
+  setSelectedModel(model: Model) {
+    this.is_editing = true;
+    this.selectedItem = model;
+  }
+
   selectLength(length: string) {
     this._selectLength = length;
   }
@@ -230,31 +116,37 @@ export class OrderComponent {
     this.selectedFabric = fabric;
   }
 
-  selectNeckline(neckline: StyleOption) {
-    this.selectedNeckline = neckline;
-  }
-
-  selectSleeve(sleeve: StyleOption) {
-    this.selectedSleeve = sleeve;
+  selectNeckline(customization: Customization) {
+    this.selectedCustomization = customization;
   }
 
   calculateFabricCost(): number {
-    if (!this.selectedFabric) return 0;
-    const metersNeeded = this.selectedLength / 39.37; // Convert inches to meters
-    return Math.ceil(metersNeeded * this.selectedFabric.pricePerMeter);
+    if (!this.selectedFabric || !this.selectedItem) return 0;
+    
+    const fabricUsage = this.selectedItem.fabric_usage.find(
+      usage => usage.key === this._selectLength
+    );
+    
+    return fabricUsage ? Math.ceil(fabricUsage.value * this.selectedFabric.value) : 0;
   }
 
   calculateCustomizationCost(): number {
-    let cost = 0;
-    if (this.selectedNeckline) cost += this.selectedNeckline.priceModifier;
-    if (this.selectedSleeve) cost += this.selectedSleeve.priceModifier;
-    return cost;
+    return this.selectedCustomization?.base_price || 0;
   }
 
   calculateTotalCost(): number {
-    const basePrice = this.selectedItem?.price || 0;
+    if (!this.selectedItem) return 0;
+    
+    const basePrice = this.selectedItem.base_price.find(
+      price => price.key === this._selectLength
+    );
+    
+    const basePriceValue = basePrice ? Number(basePrice.value) : 0;
+    
     return (
-      basePrice + this.calculateFabricCost() + this.calculateCustomizationCost()
+      basePriceValue + 
+      this.calculateFabricCost() + 
+      this.calculateCustomizationCost()
     );
   }
 
@@ -262,8 +154,7 @@ export class OrderComponent {
     return !!(
       this.selectedItem &&
       this.selectedFabric &&
-      this.selectedNeckline &&
-      this.selectedSleeve
+      this.selectedCustomization
     );
   }
 
@@ -273,9 +164,8 @@ export class OrderComponent {
     const customizedItem = {
       ...this.selectedItem!,
       fabric: this.selectedFabric,
-      neckline: this.selectedNeckline,
-      sleeve: this.selectedSleeve,
-      length: this.selectedLength,
+      customization: this.selectedCustomization,
+      length: this._selectLength,
       notes: this.additionalNotes,
       totalPrice: this.calculateTotalCost(),
     };
@@ -287,5 +177,25 @@ export class OrderComponent {
 
   select_outfit() {
     this.selected_outfit.emit(true);
+  }
+
+  getBasePrice(): number {
+    if (!this.selectedItem) return 0;
+    const basePrice = this.selectedItem.base_price.find(
+      price => price.key === this._selectLength
+    );
+    return Number(basePrice?.value) || 0;
+  }
+
+  getFabricConsumption(): number {
+    if (!this.selectedItem) return 0;
+    const usage = this.selectedItem.fabric_usage.find(
+      usage => usage.key === this._selectLength
+    );
+    return usage?.value || 0;
+  }
+
+  getFabricUsageForSize(sizeKey: string): number {
+    return this.selectedItem?.fabric_usage.find(u => u.key === sizeKey)?.value || 0;
   }
 }

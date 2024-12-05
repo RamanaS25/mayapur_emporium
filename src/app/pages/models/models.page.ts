@@ -188,6 +188,7 @@ export class ModelsPage implements OnInit {
   } 
 
   itemAdded(x: any) {
+ 
     if (x.success) {
       this.isModalOpen = false;
       this.showToast('Fabric added successfully', 'success');
