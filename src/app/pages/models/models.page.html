@@ -100,8 +100,7 @@
                       </ion-toolbar>
 
                       <ion-card-content>
-                        @for (item of getKeyPairValues(newModel.base_price);
-                        track $index) {
+                        @for (item of selectedModel?.base_price; track $index) {
 
                         <div lines="none" class="price-input-item">
                           <ion-note>{{ $index + 1 }}.</ion-note>
@@ -111,6 +110,7 @@
                             fill="outline"
                             label="Size"
                             [(ngModel)]="item.key"
+                            (ionChange)="updateValue('base_price', item.key, item.value)"
                             labelPlacement="floating"
                           >
                           </ion-input>
@@ -121,6 +121,7 @@
                             label="Cost"
                             labelPlacement="floating"
                             [(ngModel)]="item.value"
+                            (ionChange)="updateValue('base_price', item.key, item.value)"
                             type="number"
                           >
                             <div slot="start">₹</div>
@@ -157,9 +158,8 @@
                         </ion-buttons>
                       </ion-toolbar>
                       <ion-card-content>
-                        @for (item of
-                        getKeyPairValues(selectedModel.fabric_usage); track
-                        $index) {
+                        @for (item of selectedModel.fabric_usage; track $index)
+                        {
 
                         <div lines="none" class="price-input-item">
                           <ion-note>{{ $index + 1 }}.</ion-note>
@@ -168,7 +168,8 @@
                             class="modern-input"
                             fill="outline"
                             label="Size"
-                            [value]="item.key"
+                            [(ngModel)]="item.key"
+                            (ionChange)="updateValue('fabric_usage', item.key, item.value)"
                             labelPlacement="floating"
                           >
                           </ion-input>
@@ -178,7 +179,8 @@
                             fill="outline"
                             label="Fabric Usage"
                             labelPlacement="floating"
-                            [value]="item.value"
+                            [(ngModel)]="item.value"
+                            (ionChange)="updateValue('fabric_usage', item.key, item.value)"
                             type="number"
                           >
                             <div slot="start">₹</div>
@@ -193,6 +195,11 @@
                         </div>
 
                         }
+                        <ion-buttons class="save-button">
+                          <ion-button (click)="saveChanges('fabric_usage')">
+                            save
+                          </ion-button>
+                        </ion-buttons>
                       </ion-card-content>
                     </ion-card>
 
@@ -224,7 +231,7 @@
                               class="modern-input"
                               fill="outline"
                               label="name"
-                              [value]="item.name"
+                              [(ngModel)]="item.name"
                               labelPlacement="floating"
                             >
                             </ion-input>
@@ -233,7 +240,7 @@
                               class="modern-input"
                               fill="outline"
                               label="price"
-                              [value]="item.base_price"
+                              [(ngModel)]="item.base_price"
                               labelPlacement="floating"
                             >
                               <div slot="start">₹</div>

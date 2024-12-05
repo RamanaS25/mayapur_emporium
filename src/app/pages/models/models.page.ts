@@ -129,12 +129,12 @@ export class ModelsPage implements OnInit {
     this.models = x;
     this.selectedModel = x[0];
     this.newModel = this.selectedModel;
+    this.ModelTokeyValue();
     console.log(this.selectedModel);
   }
   async _fabrics() {
     let x = await this.api.getFabrics();
     this.fabrics = x;
-    console.log('aa', this.fabrics);
   }
 
   get allModels() {
@@ -169,11 +169,11 @@ export class ModelsPage implements OnInit {
   async addNewFabric(category: string, fabric: any) {
     let x = await this.api.updateModel(category, fabric);
   }
-  saveChanges(category: string) {
-    let x = this.restoreJsonFormat(
-      this.getKeyPairValues(this.selectedModel.base_price)
-    );
-    console.log(x);
+  async saveChanges(category: string) {
+    let x = this.restoreJsonFormat(this.selectedModel[category]);
+    this.newModel[category] = x;
+    //let y = await this.api.updateModel(category, this.newModel);
+    console.log('aa', this.newModel[category]);
   }
 
   getKeyPairValues(input: any) {
@@ -210,6 +210,18 @@ export class ModelsPage implements OnInit {
     );
     this.deleteFromDB(category, this.selectedModel);
     console.log(this.selectedModel.customizations);
+  }
+
+  updateValue(category: string, key: string, value: any) {
+    console.log('aaa', this.selectedModel[category]);
+  }
+  ModelTokeyValue() {
+    this.selectedModel.base_price = this.getKeyPairValues(
+      this.selectedModel.base_price
+    );
+    this.selectedModel.fabric_usage = this.getKeyPairValues(
+      this.selectedModel.fabric_usage
+    );
   }
 
   ngOnInit() {}
