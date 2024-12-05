@@ -26,8 +26,7 @@ import {
   IonBadge,
   IonModal,
   IonCheckbox,
-  IonButton,
-} from '@ionic/angular/standalone';
+  IonButton, IonToast, IonListHeader, IonImg, IonAvatar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowForward,
@@ -68,7 +67,7 @@ interface Fabric {
   templateUrl: './models.page.html',
   styleUrls: ['./models.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonAvatar, IonImg, IonListHeader, IonToast, 
     IonButton,
     IonCheckbox,
     IonModal,
@@ -105,6 +104,13 @@ export class ModelsPage implements OnInit {
   isModalOpen: boolean = false;
   category: string = '';
   newModel: any;
+
+  toast = {
+    isOpen: false,
+    message: '',
+    color: 'success',
+    duration: 3000,
+  };
   constructor() {
     addIcons({
       addCircleOutline,
@@ -124,14 +130,21 @@ export class ModelsPage implements OnInit {
     this._fabrics();
   }
 
+  showToast(message: string, color: string) {
+    this.toast.isOpen = true;
+    this.toast.message = message;
+    this.toast.color = color;
+  }
+
   async _models() {
     let x = await this.api.getModels();
     this.models = x;
+    console.log('models', this.models);
     this.selectedModel = x[0];
     this.newModel = this.selectedModel;
-    this.ModelTokeyValue();
-    console.log(this.selectedModel);
+    // console.log(this.selectedModel);
   }
+
   async _fabrics() {
     let x = await this.api.getFabrics();
     this.fabrics = x;
@@ -146,8 +159,8 @@ export class ModelsPage implements OnInit {
   }
 
   get filterFabric() {
-    let x = this.getKeyPairValues(this.selectedModel?.fabrics);
-    x = x.map((item: { key: any; value: any }) => {
+   let fabrics = this.selectedModel?.fabrics;
+    let x = fabrics?.map((item: { key: any; value: any }) => {
       return item.key;
     });
     let filter_fabric = this.allFabrics?.filter(
@@ -156,29 +169,52 @@ export class ModelsPage implements OnInit {
     return filter_fabric;
   }
 
-  addFabric(name: string, cost: number) {
-    let x = this.getKeyPairValues(this.selectedModel.fabrics);
-    console.log(x);
-    x.push({ key: name, value: cost });
-    this.selectedModel.fabrics = this.restoreJsonFormat(x);
-    this.addNewFabric('fabrics', this.selectedModel);
-    console.log(this.selectedModel);
-    console.log(this.selectedModel.fabrics);
+ async addFabric(name: string, cost: number) {
+    let fabrics = this.selectedModel.fabrics;
+    fabrics.push({ key: name, value: cost });
+  
+   let x = this.restoreJsonFormat(fabrics);
+
+    let updateModal = { ...this.selectedModel, fabrics: x };
+
+    let res = await this.api.updateModel('fabrics', updateModal);
+    if (res.success) {
+      this.isModalOpen = false;
+      this.showToast('Fabric added successfully', 'success');
+    } else {
+      this.showToast('Error adding fabric', 'danger');
+    }
+
+  } 
+
+  itemAdded(x: any) {
+    if (x.success) {
+      this.isModalOpen = false;
+      this.showToast('Fabric added successfully', 'success');
+    } else {
+      this.showToast('Error adding fabric', 'danger');
+    }
   }
 
-  async addNewFabric(category: string, fabric: any) {
-    let x = await this.api.updateModel(category, fabric);
-  }
+
   async saveChanges(category: string) {
+    
     let x = this.restoreJsonFormat(this.selectedModel[category]);
-    this.newModel[category] = x;
-    //let y = await this.api.updateModel(category, this.newModel);
-    console.log('aa', this.newModel[category]);
+    let updateModal = { ...this.selectedModel, [category]: x };
+
+    let y = await this.api.updateModel(category, updateModal);
+    if(y.success){
+      this.showToast('Changes saved successfully', 'success');
+    }else{
+      this.showToast('Error saving changes', 'danger');
+    }
+    console.log('aa', this.selectedModel[category]);
   }
 
   getKeyPairValues(input: any) {
     return Object.entries(input).map(([key, value]) => ({ key, value }));
   }
+
   restoreJsonFormat(input: { key: string; value: any }[]) {
     return input.reduce((acc: Record<string, any>, { key, value }) => {
       acc[key] = value;
@@ -186,17 +222,43 @@ export class ModelsPage implements OnInit {
     }, {});
   }
 
-  delete(key: string, value: any, category: string) {
+  formatDisplayName(input: string): string {
+    // Replace underscores with spaces and capitalize each word
+    return input
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+  async delete(key: string, value: any, category: string) {
     console.log(key);
-    let x = this.getKeyPairValues(this.selectedModel[category]).filter(
-      (item) => item.key !== key
+    let x = this.selectedModel[category].filter(
+      (item: { key: string; value: any }) => item.key !== key
     );
-    this.selectedModel[category] = this.restoreJsonFormat(x);
-    this.deleteFromDB(category, this.selectedModel);
+
+    let y = this.restoreJsonFormat(x);
+
+    let updateModal = { ...this.selectedModel, [category]: y };
+
+
+    let res = await this.deleteFromDB(category, updateModal);
+    if (res) {
+      this.selectedModel[category] = x
+      this.showToast('Item deleted successfully', 'success');
+    } else {
+      this.showToast('Error deleting item', 'danger');
+    }
+
   }
 
-  async deleteFromDB(category: string, input: any) {
+  async deleteFromDB(category: string, input: any): Promise<boolean> {
     let x = await this.api.updateModel(category, input);
+
+    if (x.success) {
+     
+      return true;
+    } else {
+      return false;
+    }
   }
 
   removeItemByName(array: any[], name: string): any[] {
@@ -209,20 +271,14 @@ export class ModelsPage implements OnInit {
       name
     );
     this.deleteFromDB(category, this.selectedModel);
+
     console.log(this.selectedModel.customizations);
   }
 
   updateValue(category: string, key: string, value: any) {
     console.log('aaa', this.selectedModel[category]);
   }
-  ModelTokeyValue() {
-    this.selectedModel.base_price = this.getKeyPairValues(
-      this.selectedModel.base_price
-    );
-    this.selectedModel.fabric_usage = this.getKeyPairValues(
-      this.selectedModel.fabric_usage
-    );
-  }
+
 
   ngOnInit() {}
 }

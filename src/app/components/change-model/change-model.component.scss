@@ -36,9 +36,13 @@
 }
 .save-button {
   display: block;
-
-  --background: rgba(255, 255, 255, 0.89);
-  color: black;
-  margin-left: 10px;
-  margin-right: 10px;
+  --background: #a8d8ea; /* Soft pastel blue */
+  --border-radius: 8px;
+  --box-shadow: 0 4px 12px rgba(168, 216, 234, 0.3);
+  color: #2b4f60; /* Darker text for contrast */
+  margin: 16px 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
 }

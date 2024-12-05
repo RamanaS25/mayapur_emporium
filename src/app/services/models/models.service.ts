@@ -18,8 +18,15 @@ export class ModelsService {
         throw error;
       }
 
-      console.log(data);
-      return data;
+      let x = data.map((item) => ({
+        ...item,
+        fabrics: this.getKeyPairValues(item.fabrics),
+        fabric_usage: this.getKeyPairValues(item.fabric_usage),
+        base_price: this.getKeyPairValues(item.base_price),
+      }));
+
+      console.log(x);
+      return x;
     } catch (error) {
       throw error;
     }
@@ -40,7 +47,7 @@ export class ModelsService {
     }
   }
 
-  async updateModel(row: string, model: any) {
+  async updateModel(row: string, model: any): Promise<{ success: boolean; error: string | null; data: any | null }> {
     console.log(row, model);
     try {
       const { data, error } = await this.supabase
@@ -50,15 +57,26 @@ export class ModelsService {
         })
         .eq('id', model.id);
       if (error) {
-        throw error;
+        return {
+          success: false,
+          error: error.message,
+          data: null
+        };
       }
-      console.log('service', row, model);
-      console.log('service2', row[model]);
-      return data;
-    } catch (error) {
-      throw error;
+      return {
+        success: true,
+        error: null,
+        data: data
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+        data: null
+      };
     }
   }
+
   getKeyPairValues(input: any) {
     return Object.entries(input).map(([key, value]) => ({ key, value }));
   }

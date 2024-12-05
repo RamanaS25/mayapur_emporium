@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -34,6 +34,7 @@ export class ChangeModelComponent implements OnInit {
   api = inject(ModelsService);
   @Input() category: any;
   @Input() model: any;
+  @Output() item_added = new EventEmitter<any>();
 
   name: string = '';
   cost: number = 0;
@@ -47,20 +48,29 @@ export class ChangeModelComponent implements OnInit {
   constructor() {}
 
   async addNew() {
+    let updateCat
     if (this.category === 'customizations') {
       this.test();
     } else {
-      this.addToModel();
+      updateCat = this.addToModel();
     }
-    let x = await this.api.updateModel(this.category, this.model);
+    let updateModal = { ...this.model, [this.category]: updateCat };
+    console.log(updateModal);
+    let x = await this.api.updateModel(this.category, updateModal);
+    this.item_added.emit(x);
+
   }
 
   addToModel() {
-    console.log(this.model);
-    let x = this.getKeyPairValues(this.model[this.category]);
+
+    let x = this.model[this.category];
     x.push({ key: this.name, value: this.cost });
-    this.model[this.category] = this.restoreJsonFormat(x);
-    console.log(this.model);
+    this.model[this.category] = x;
+    let y = this.restoreJsonFormat(this.model[this.category]);
+    
+
+
+    return y
   }
 
   test() {
@@ -68,6 +78,7 @@ export class ChangeModelComponent implements OnInit {
     this.model.customizations = x;
     console.log(x);
   }
+
   addItems<T>(array: T[], newItems: T | T[]): T[] {
     if (Array.isArray(newItems)) {
       return [...array, ...newItems]; // Добавление массива элементов
