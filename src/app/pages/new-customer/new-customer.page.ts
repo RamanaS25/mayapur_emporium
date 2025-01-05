@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -21,30 +21,46 @@ import {
 import { addIcons } from 'ionicons';
 import { arrowForward, maleOutline, femaleOutline } from 'ionicons/icons';
 import { OrderComponent } from "../../components/order/order.component";
+import { OrderCreationService } from 'src/app/services/order/order-creation.service';
 
 type Step = 'gender' | 'details' | 'measurements' | 'order';
 
-interface CustomerMeasurements {
-  chest: number | null;
-  shoulders: number | null;
-  armLength: number | null;
-  bicep: number | null;
-  neck: number | null;
-  wrist: number | null;
-  upperBack: number | null;
-  lowerBack: number | null;
-  
+interface DressMeasurements {
+  length_of_item: number | null;
+  shoulder_width: number | null;
+  shoulder_to_waist: number | null;
+  bodies_length: number | null;
+  upper_back_width: number | null;
+  chest_width: number | null;
+  upper_chest: number | null;
+  chest_bust: number | null;
+  under_bust: number | null;
+  bust_point: number | null;
   waist: number | null;
   hips: number | null;
-  inseam: number | null;
+  sleeve_length: number | null;
+  armhole: number | null;
+  bicep_elbow_wrist: number | null;
+  sleeve_open: number | null;
+  neck_drop_front: number | null;
+  neck_drop_back: number | null;
+}
+
+interface PantMeasurements {
+  total_length: number | null;
+  waist: number | null;
+  hips: number | null;
   thigh: number | null;
-  knee: number | null;
-  calf: number | null;
-  ankle: number | null;
-  
-  totalLength: number | null;
-  shoulderToWaist: number | null;
-  waistToAnkle: number | null;
+  inseam: number | null;
+  seat_round: number | null;
+  pant_bottom_open: number | null;
+}
+
+interface SkirtMeasurements {
+  length_front: number | null;
+  length_back: number | null;
+  waist: number | null;
+  hips: number | null;
 }
 
 interface CustomerData {
@@ -53,7 +69,11 @@ interface CustomerData {
   email: string;
   phone: string;
   gender: 'male' | 'female';
-  measurements: CustomerMeasurements;
+  measurements: {
+    dress: DressMeasurements;
+    pant: PantMeasurements;
+    skirt: SkirtMeasurements;
+  }
 }
 
 @Component({
@@ -85,7 +105,7 @@ interface CustomerData {
 })
 export class NewCustomerPage {
   currentStep: Step = 'gender';
-  
+  modelsService = inject(OrderCreationService);
 
 
   customerData: CustomerData = {
@@ -95,26 +115,41 @@ export class NewCustomerPage {
     phone: '',
     gender: 'male',
     measurements: {
-      chest: null,
-      shoulders: null,
-      armLength: null,
-      bicep: null,
-      neck: null,
-      wrist: null,
-      upperBack: null,
-      lowerBack: null,
-      
-      waist: null,
-      hips: null,
-      inseam: null,
-      thigh: null,
-      knee: null,
-      calf: null,
-      ankle: null,
-      
-      totalLength: null,
-      shoulderToWaist: null,
-      waistToAnkle: null
+      dress: {
+        length_of_item: null,
+        shoulder_width: null,
+        shoulder_to_waist: null,
+        bodies_length: null,
+        upper_back_width: null,
+        chest_width: null,
+        upper_chest: null,
+        chest_bust: null,
+        under_bust: null,
+        bust_point: null,
+        waist: null,
+        hips: null,
+        sleeve_length: null,
+        armhole: null,
+        bicep_elbow_wrist: null,
+        sleeve_open: null,
+        neck_drop_front: null,
+        neck_drop_back: null
+      },
+      pant: {
+        total_length: null,
+        waist: null,
+        hips: null,
+        thigh: null,
+        inseam: null,
+        seat_round: null,
+        pant_bottom_open: null
+      },
+      skirt: {
+        length_front: null,
+        length_back: null,
+        waist: null,
+        hips: null
+      }
     }
   };
 
@@ -124,9 +159,22 @@ export class NewCustomerPage {
     color: 'success'
   };
 
+  models: any[] = [];
+
   constructor() {
     addIcons({ arrowForward, maleOutline, femaleOutline });
+    this.getModels();
   }
+
+  async getModels() {
+    const { success, error, data } = await this.modelsService.getModels();
+    if (success) {
+      console.log(JSON.stringify(data, null, 2));
+      this.models = data;
+    }
+  }
+
+
 
   selectStep(step: Step) {
     // Only allow moving to details if gender is selected
@@ -181,9 +229,9 @@ export class NewCustomerPage {
   }
 
   private validateMeasurements(): boolean {
-    if (this.customerData.measurements.chest === null || 
-        this.customerData.measurements.waist === null || 
-        this.customerData.measurements.hips === null) {
+    if (this.customerData.measurements.dress.length_of_item === null || 
+        this.customerData.measurements.dress.waist === null || 
+        this.customerData.measurements.dress.hips === null) {
       this.showToast('Please fill all measurements', 'warning');
       return false;
     }
