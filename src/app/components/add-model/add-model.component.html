@@ -1,0 +1,148 @@
+<ion-card class="price-card-content">
+  <ion-toolbar style="--background: transparent">
+    <ion-card-header>Name and Gender</ion-card-header>
+  </ion-toolbar>
+
+  <ion-card-content>
+    <div lines="none" class="price-input-item">
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Name"
+        [(ngModel)]="model.name"
+        labelPlacement="floating"
+      >
+      </ion-input>
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Gender"
+        labelPlacement="floating"
+        [(ngModel)]="model.gender"
+      >
+      </ion-input>
+    </div>
+  </ion-card-content>
+</ion-card>
+
+<ion-card class="price-card-content">
+  <ion-toolbar style="--background: transparent">
+    <ion-card-header>Base Price</ion-card-header>
+  </ion-toolbar>
+
+  <ion-card-content>
+    <div lines="none" class="price-input-item">
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Size"
+        [(ngModel)]="model.base_price[0].key"
+        labelPlacement="floating"
+      >
+      </ion-input>
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Cost"
+        labelPlacement="floating"
+        [(ngModel)]="model.base_price[0].value"
+        type="number"
+      >
+        <div slot="start">₹</div>
+      </ion-input>
+    </div>
+  </ion-card-content>
+</ion-card>
+<ion-card class="price-card-content">
+  <ion-toolbar style="--background: transparent">
+    <ion-card-header>fabric usage</ion-card-header>
+  </ion-toolbar>
+
+  <ion-card-content>
+    <div lines="none" class="price-input-item">
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Size"
+        [(ngModel)]="model.fabric_usage[0].key"
+        labelPlacement="floating"
+      >
+      </ion-input>
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Usage"
+        labelPlacement="floating"
+        [(ngModel)]="model.fabric_usage[0].value"
+        type="number"
+      >
+        <div slot="start">Meters</div>
+      </ion-input>
+    </div>
+  </ion-card-content>
+</ion-card>
+<ion-card class="price-card-content">
+  <ion-toolbar style="--background: transparent">
+    <ion-card-header>Customizations</ion-card-header>
+  </ion-toolbar>
+
+  <ion-card-content>
+    <div lines="none" class="price-input-item">
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Name"
+        [(ngModel)]="model.customizations[0].name"
+        labelPlacement="floating"
+      >
+      </ion-input>
+      <ion-input
+        mode="md"
+        class="modern-input"
+        fill="outline"
+        label="Cost"
+        labelPlacement="floating"
+        [(ngModel)]="model.customizations[0].base_price"
+        type="number"
+      >
+        <div slot="start">₹</div>
+      </ion-input>
+    </div>
+  </ion-card-content>
+</ion-card>
+
+<ion-card class="price-card-content">
+  <ion-toolbar style="--background: transparent">
+    <ion-card-header>Fabrics</ion-card-header>
+  </ion-toolbar>
+  <ion-card-content>
+    <ion-list>
+      @for (item of fabrics; track $index) {
+      <ion-item lines="full">
+        <ion-avatar slot="start" style="border-radius: 0px">
+          <ion-img
+            src="https://ionicframework.com/docs/img/demos/card-media.png"
+          ></ion-img>
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ item?.name }}</h2>
+          <small> ₹ {{ item?.price_per_meter }} per meter</small>
+        </ion-label>
+        <ion-checkbox
+          slot="end"
+          (click)="addFabric(item?.name, item?.price_per_meter)"
+        ></ion-checkbox>
+      </ion-item>
+      }
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+
+<ion-button (click)="addNew()" class="save-button">save</ion-button>

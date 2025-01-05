@@ -1,0 +1,38 @@
+.price-card-content {
+  .price-input-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+    align-items: center;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 30px 1fr 40px;
+    }
+
+    ion-note {
+      font-weight: 500;
+      color: var(--ion-color-medium);
+      text-align: center;
+    }
+
+    ion-button {
+      padding: 0;
+      margin: 0;
+      height: 36px;
+    }
+
+    .modern-input {
+      --border-radius: 8px;
+      --background: var(--ion-color-light);
+
+      &[readonly] {
+        opacity: 0.8;
+      }
+
+      &:focus-within {
+        --border-color: var(--ion-color-primary);
+      }
+    }
+  }
+}
