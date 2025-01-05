@@ -47,7 +47,10 @@ export class ModelsService {
     }
   }
 
-  async updateModel(row: string, model: any): Promise<{ success: boolean; error: string | null; data: any | null }> {
+  async updateModel(
+    row: string,
+    model: any
+  ): Promise<{ success: boolean; error: string | null; data: any | null }> {
     console.log(row, model);
     try {
       const { data, error } = await this.supabase
@@ -60,19 +63,54 @@ export class ModelsService {
         return {
           success: false,
           error: error.message,
-          data: null
+          data: null,
         };
       }
       return {
         success: true,
         error: null,
-        data: data
+        data: data,
       };
     } catch (error: any) {
       return {
         success: false,
         error: error.message,
-        data: null
+        data: null,
+      };
+    }
+  }
+
+  async addModel(
+    model: any
+  ): Promise<{ success: boolean; error: string | null; data: any | null }> {
+    try {
+      const { data, error } = await this.supabase.from('tailor_models').insert({
+        name: 'test',
+        gender: 'male',
+        created_at: new Date(),
+        base_price: model.base_price,
+        fabric_usage: model.fabric_usage,
+        customizations: model.customizations,
+        fabrics: model.fabrics,
+        model_pictures: model.model_pictures,
+      });
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+          data: null,
+        };
+      }
+      return {
+        success: true,
+        error: null,
+        data: data,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+        data: null,
       };
     }
   }

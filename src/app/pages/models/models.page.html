@@ -6,7 +6,6 @@
 </ion-toolbar>
 
 <ion-content [fullscreen]="true">
-
   <ion-toast
     [isOpen]="toast.isOpen"
     [message]="toast.message"
@@ -21,7 +20,14 @@
       <ion-col size="3">
         <ion-card class="models-list-card">
           <ion-card-header>
-            <ion-card-title>Models</ion-card-title>
+            <ion-card-title
+              >Models
+              <ion-button fill="clear">
+                <ion-icon
+                  name="add-circle-outline"
+                  (click)="isNewModalOpen = true"
+                ></ion-icon></ion-button
+            ></ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-list class="models-list">
@@ -86,13 +92,13 @@
                 </div>
                 <div class="pictures">
                   @for (item of [1,2,3,4,5]; track $index) {
-              
-                    <img
-                      src="https://ionicframework.com/docs/img/demos/card-media.png"
-                      alt="pct"
-                      style="width: 150px; height: auto; object-fit: contain;"
-                    />
-                 
+
+                  <img
+                    src="https://ionicframework.com/docs/img/demos/card-media.png"
+                    alt="pct"
+                    style="width: 150px; height: auto; object-fit: contain"
+                  />
+
                   }
                 </div>
                 <div>
@@ -343,51 +349,71 @@
   </ion-grid>
 </ion-content>
 
-<ion-modal
-  [isOpen]="isModalOpen"
-  (didDismiss)="isModalOpen = false"
->
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
   <ng-template>
     <ion-item lines="full">
       <ion-label>{{ formatDisplayName(category) }}</ion-label>
-      <ion-icon name="close"  (click)="isModalOpen = false" slot="end" style="cursor: pointer;"></ion-icon>
+      <ion-icon
+        name="close"
+        (click)="isModalOpen = false"
+        slot="end"
+        style="cursor: pointer"
+      ></ion-icon>
     </ion-item>
     <ion-content>
       @if (category !== 'fabrics') {
-        <app-change-model
-          [category]="category"
-          [model]="selectedModel"
-          (item_added)="itemAdded($event)"
-        ></app-change-model>
-        
-        }@else {
-        <div style="padding: 20px">
-        
-          <ion-list class="fabric-list">
-            <ion-list-header>
-              <ion-label>Available Fabrics</ion-label>
-            </ion-list-header>
-            @for (item of filterFabric; track $index) {
-            <ion-item lines="full">
-              <ion-avatar slot="start" style="border-radius: 0px;">
-                <ion-img src="https://ionicframework.com/docs/img/demos/card-media.png"></ion-img>
-              </ion-avatar>
-              <ion-label>
-                <h2>{{ item?.name }}</h2>
-                <small> ₹ {{ item?.price_per_meter }} per meter</small>
-              </ion-label>
-              <ion-checkbox
-                slot="end"
-                (click)="addFabric(item?.name, item?.price_per_meter)"
-              ></ion-checkbox>
-            </ion-item>
-            }
-          </ion-list>
-          
-        </div>
-        }
+      <app-change-model
+        [category]="category"
+        [model]="selectedModel"
+        (item_added)="itemAdded($event)"
+      ></app-change-model>
+
+      }@else {
+      <div style="padding: 20px">
+        <ion-list class="fabric-list">
+          <ion-list-header>
+            <ion-label>Available Fabrics</ion-label>
+          </ion-list-header>
+          @for (item of filterFabric; track $index) {
+          <ion-item lines="full">
+            <ion-avatar slot="start" style="border-radius: 0px">
+              <ion-img
+                src="https://ionicframework.com/docs/img/demos/card-media.png"
+              ></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ item?.name }}</h2>
+              <small> ₹ {{ item?.price_per_meter }} per meter</small>
+            </ion-label>
+            <ion-checkbox
+              slot="end"
+              (click)="addFabric(item?.name, item?.price_per_meter)"
+            ></ion-checkbox>
+          </ion-item>
+          }
+        </ion-list>
+      </div>
+      }
     </ion-content>
-   
   </ng-template>
-  </ion-modal
+</ion-modal>
+<ion-modal
+  [isOpen]="isNewModalOpen"
+  (didDismiss)="isNewModalOpen = false"
+  style="--width: 100vw; --height: 100vh"
 >
+  <ng-template>
+    <ion-item lines="full">
+      <ion-label>Add new model</ion-label>
+      <ion-icon
+        name="close"
+        (click)="isNewModalOpen = false"
+        slot="end"
+        style="cursor: pointer"
+      ></ion-icon>
+    </ion-item>
+    <ion-content>
+      <app-add-model></app-add-model>
+    </ion-content>
+  </ng-template>
+</ion-modal>

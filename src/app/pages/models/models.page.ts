@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModelsService } from 'src/app/services/models/models.service';
 import { ChangeModelComponent } from 'src/app/components/change-model/change-model.component';
+import { AddModelComponent } from 'src/app/components/add-model/add-model.component';
 import {
   IonContent,
   IonTitle,
@@ -26,7 +27,12 @@ import {
   IonBadge,
   IonModal,
   IonCheckbox,
-  IonButton, IonToast, IonListHeader, IonImg, IonAvatar } from '@ionic/angular/standalone';
+  IonButton,
+  IonToast,
+  IonListHeader,
+  IonImg,
+  IonAvatar,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowForward,
@@ -67,7 +73,11 @@ interface Fabric {
   templateUrl: './models.page.html',
   styleUrls: ['./models.page.scss'],
   standalone: true,
-  imports: [IonAvatar, IonImg, IonListHeader, IonToast, 
+  imports: [
+    IonAvatar,
+    IonImg,
+    IonListHeader,
+    IonToast,
     IonButton,
     IonCheckbox,
     IonModal,
@@ -94,6 +104,7 @@ interface Fabric {
     FormsModule,
     IonMenuButton,
     ChangeModelComponent,
+    AddModelComponent,
   ],
 })
 export class ModelsPage implements OnInit {
@@ -104,6 +115,7 @@ export class ModelsPage implements OnInit {
   isModalOpen: boolean = false;
   category: string = '';
   newModel: any;
+  isNewModalOpen: boolean = false;
 
   toast = {
     isOpen: false,
@@ -159,7 +171,7 @@ export class ModelsPage implements OnInit {
   }
 
   get filterFabric() {
-   let fabrics = this.selectedModel?.fabrics;
+    let fabrics = this.selectedModel?.fabrics;
     let x = fabrics?.map((item: { key: any; value: any }) => {
       return item.key;
     });
@@ -169,11 +181,11 @@ export class ModelsPage implements OnInit {
     return filter_fabric;
   }
 
- async addFabric(name: string, cost: number) {
+  async addFabric(name: string, cost: number) {
     let fabrics = this.selectedModel.fabrics;
     fabrics.push({ key: name, value: cost });
-  
-   let x = this.restoreJsonFormat(fabrics);
+
+    let x = this.restoreJsonFormat(fabrics);
 
     let updateModal = { ...this.selectedModel, fabrics: x };
 
@@ -184,8 +196,7 @@ export class ModelsPage implements OnInit {
     } else {
       this.showToast('Error adding fabric', 'danger');
     }
-
-  } 
+  }
 
   itemAdded(x: any) {
     if (x.success) {
@@ -196,16 +207,14 @@ export class ModelsPage implements OnInit {
     }
   }
 
-
   async saveChanges(category: string) {
-    
     let x = this.restoreJsonFormat(this.selectedModel[category]);
     let updateModal = { ...this.selectedModel, [category]: x };
 
     let y = await this.api.updateModel(category, updateModal);
-    if(y.success){
+    if (y.success) {
       this.showToast('Changes saved successfully', 'success');
-    }else{
+    } else {
       this.showToast('Error saving changes', 'danger');
     }
     console.log('aa', this.selectedModel[category]);
@@ -226,7 +235,7 @@ export class ModelsPage implements OnInit {
     // Replace underscores with spaces and capitalize each word
     return input
       .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
   }
   async delete(key: string, value: any, category: string) {
@@ -239,22 +248,19 @@ export class ModelsPage implements OnInit {
 
     let updateModal = { ...this.selectedModel, [category]: y };
 
-
     let res = await this.deleteFromDB(category, updateModal);
     if (res) {
-      this.selectedModel[category] = x
+      this.selectedModel[category] = x;
       this.showToast('Item deleted successfully', 'success');
     } else {
       this.showToast('Error deleting item', 'danger');
     }
-
   }
 
   async deleteFromDB(category: string, input: any): Promise<boolean> {
     let x = await this.api.updateModel(category, input);
 
     if (x.success) {
-     
       return true;
     } else {
       return false;
@@ -278,7 +284,6 @@ export class ModelsPage implements OnInit {
   updateValue(category: string, key: string, value: any) {
     console.log('aaa', this.selectedModel[category]);
   }
-
 
   ngOnInit() {}
 }
